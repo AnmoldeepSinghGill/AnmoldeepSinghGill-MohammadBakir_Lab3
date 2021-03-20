@@ -11,7 +11,8 @@ module.exports = function (app) {
   app.get("/students", students.listAllStudents);
   app.get("/course/:courseId", students.listAllStudentsByCourse);
 
-  app.put("/student/:studentId/:courseId", students.enrollStudentInCourse);
+  app.put("/addCourse/:studentId/:courseId", students.enrollStudentInCourse);
+  app.put("/dropCourse/:studentId/:courseId", students.dropCourseByStudentId);
 
   app.param("studentId", students.studentById);
   app.param("courseId", courses.courseById);

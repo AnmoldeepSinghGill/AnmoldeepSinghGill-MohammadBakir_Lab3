@@ -201,3 +201,20 @@ exports.studentById = function (req, res, next, id) {
     }
   });
 };
+
+exports.dropCourseByStudentId = (req, res, next) => {
+  const student = req.student;
+  const courseId = req.params.courseId;
+
+  if (student && courseId) {
+    student.courses = student.courses.filter((c) => c != courseId);
+    console.log(student.courses);
+    student.save((err, studentResult) => {
+      if (err) {
+        return next(err);
+      } else {
+        res.status(200).send(studentResult);
+      }
+    });
+  }
+};
