@@ -218,3 +218,17 @@ exports.dropCourseByStudentId = (req, res, next) => {
     });
   }
 };
+
+exports.getAllCoursesByStudent = (req, res, next) => {
+  Student.findById(req.params.studentId)
+    .populate("courses")
+    .exec(function (err, student) {
+      if (err) {
+        // Call the next middleware with an error message
+        return next(err);
+      } else {
+        res.status(200).send(student.courses);
+        // Call the next middleware
+      }
+    });
+};

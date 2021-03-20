@@ -14,6 +14,8 @@ module.exports = function (app) {
   app.put("/addCourse/:studentId/:courseId", students.enrollStudentInCourse);
   app.put("/dropCourse/:studentId/:courseId", students.dropCourseByStudentId);
 
+  app.get("/studentCourses/:studentId", students.getAllCoursesByStudent);
+
   app.param("studentId", students.studentById);
   app.param("courseId", courses.courseById);
 };
