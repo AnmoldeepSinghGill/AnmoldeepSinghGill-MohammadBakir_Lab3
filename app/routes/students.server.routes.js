@@ -8,7 +8,7 @@ module.exports = function (app) {
 
   app.post("/student", students.signUp);
   app.get("/students", students.listAllStudents);
-  app.get("/course/:courseId", students.listAllStudentsByCourse);
-
+  app.get("/students/:courseId", students.listAllStudentsByCourse);
   app.put("/student/:studentId/:courseId", students.enrollStudentInCourse);
+  app.get('/read_cookie', students.isSignedIn);
 };
