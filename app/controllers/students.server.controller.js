@@ -151,12 +151,14 @@ exports.listAllStudents = (req, res) => {
     });
 };
 exports.listAllStudentsByCourse = function (req, res, next) {
+    console.log("-> req.params.courseId", req.params.courseId);
     Student.find({
-        course: req.id
+        courses: req.params.courseId
     }, (err, students) => {
         if (err) {
             return getErrorMessage(err);
         }
+        console.log("there you go",students);
         res.status(200).send(students);
     });
 };
