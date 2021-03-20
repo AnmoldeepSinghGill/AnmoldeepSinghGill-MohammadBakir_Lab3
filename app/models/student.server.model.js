@@ -27,10 +27,12 @@ const StudentSchema = new Schema({
   city: String,
   phoneNumber: String,
   program: String,
-  course: {
-    type: Schema.Types.ObjectId,
-    ref: "Course",
-  },
+  courses: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Course",
+    },
+  ],
 });
 
 // Use a pre-save middleware to hash the password

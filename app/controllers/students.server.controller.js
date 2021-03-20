@@ -1,5 +1,6 @@
 // Load the module dependencies
 const Student = require("mongoose").model("Student");
+const Course = require("mongoose").model("Course");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const config = require("../../config/config");
@@ -148,4 +149,77 @@ exports.listAllStudents = (req, res) => {
       res.status(200).send(students);
     }
   });
+};
+
+exports.enrollStudentInCourse = (req, res, next) => {
+  const id = req.params.studentId;
+  const courseId = req.params.courseId;
+  console.log(id);
+
+  let studentObj = null;
+
+  // find that student by email
+  Student.findById(id, (err, student) => {
+    if (err) {
+      return next(err);
+    } else {
+      if (student !== null) {
+        studentObj = student;
+        console.log(studentObj);
+      } else {
+        return next("Student Not found");
+      }
+    }
+  }).then(function () {
+    if (studentObj !== null) {
+      Course.findById(courseId, (err, course) => {
+        if (err) {
+          return next(err);
+        } else {
+          console.log(course);
+          studentObj.courses.push(course);
+          console.log(studentObj);
+          studentObj.save((err, student) => {
+            if (err) {
+              return next(err);
+            } else {
+              res.status(200).send(student);
+            }
+          });
+        }
+      });
+      //   var comment = new Comment(req.body);
+      //   comment.student = studentObj;
+      //   console.log(comment);
+      //   comment.save((err) => {
+      //     // If an error occurs, use flash messages to report the error
+      //     if (err) {
+      //       // Use the error handling method to get the error message
+      //       const message = getErrorMessage(err);
+      //       console.log(message);
+      //       // save the error in flash
+      //       req.flash("error", message); //save the error into flash memory
+
+      //       // Redirect the user back to the signup page
+      //       return res.redirect("/submitcomments");
+      //     }
+
+      //     // Redirect the user to thank you page application page
+      //     return res.redirect("/thankyou");
+      //   });
+    }
+  });
+
+  //   // Try saving the new Student  document
+  //   student.save((err, student) => {
+  //     // If an error occurs, use flash messages to report the error
+  //     if (err) {
+  //       // Use the error handling method to get the error message
+  //       const message = getErrorMessage(err);
+  //       console.log(message);
+  //     }
+
+  //     // Redirect the Student  back to the main application page
+  //     res.status(200).send({ student: student });
+  //   });
 };
