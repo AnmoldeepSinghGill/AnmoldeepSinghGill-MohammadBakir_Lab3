@@ -1,5 +1,6 @@
 //Load the 'students' controller
 var students = require("../controllers/students.server.controller");
+var courses = require("../controllers/courses.server.controller");
 
 //handle routing for get and post request
 module.exports = function (app) {
@@ -11,4 +12,7 @@ module.exports = function (app) {
   app.get("/course/:courseId", students.listAllStudentsByCourse);
 
   app.put("/student/:studentId/:courseId", students.enrollStudentInCourse);
+
+  app.param("studentId", students.studentById);
+  app.param("courseId", courses.courseById);
 };

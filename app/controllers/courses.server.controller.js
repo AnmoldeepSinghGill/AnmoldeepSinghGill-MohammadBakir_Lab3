@@ -18,7 +18,7 @@ exports.addCourse = (req, res) => {
   });
 };
 
-exports.listAllCourses = (req, res) => {
+exports.listAllCourses = (req, res, next) => {
   Course.find({}, (err, courses) => {
     if (err) {
       return next(err);
@@ -29,13 +29,19 @@ exports.listAllCourses = (req, res) => {
   });
 };
 
-exports.listAllCourses = (req, res) => {
-  Course.find({}, (err, courses) => {
+// 'courseById' controller method to find a course by its id
+exports.courseById = function (req, res, next, id) {
+  // Use the 'Course' static 'findById' method to retrieve a specific student
+  Course.findById(id, (err, course) => {
     if (err) {
+      // Call the next middleware with an error message
       return next(err);
     } else {
-      console.log("courses", courses);
-      res.status(200).send(courses);
+      // Set the 'req.course' property
+      req.course = course;
+      console.log(course);
+      // Call the next middleware
+      next();
     }
   });
 };
