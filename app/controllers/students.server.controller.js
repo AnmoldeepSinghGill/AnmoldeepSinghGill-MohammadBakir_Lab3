@@ -170,9 +170,11 @@ exports.enrollStudentInCourse = (req, res, next) => {
   const student = req.student;
   const course = req.course;
 
-  let studentObj = null;
-
   if (student && course) {
+    if (student.courses.includes(req.params.courseId)) {
+      console.log("already enrolled");
+      return next("Patient already enrolled into the course.");
+    }
     //TODO add the validation for course already exists
     student.courses.push(course);
     student.save((err, studentResult) => {
