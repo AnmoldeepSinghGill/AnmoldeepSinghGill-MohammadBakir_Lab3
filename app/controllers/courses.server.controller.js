@@ -28,3 +28,14 @@ exports.listAllCourses = (req, res) => {
     }
   });
 };
+
+exports.listAllCourses = (req, res) => {
+  Course.find({}, (err, courses) => {
+    if (err) {
+      return next(err);
+    } else {
+      console.log("courses", courses);
+      res.status(200).send(courses);
+    }
+  });
+};
