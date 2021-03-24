@@ -29,4 +29,5 @@ module.exports = function (app) {
 
   app.param("studentId", students.studentById);
   app.param("courseId", courses.courseById);
+  app.get('/read_cookie', students.isSignedIn);
 };

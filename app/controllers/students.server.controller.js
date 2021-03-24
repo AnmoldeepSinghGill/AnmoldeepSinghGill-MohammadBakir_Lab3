@@ -191,30 +191,25 @@ exports.signUp = (req, res) => {
   });
 };
 
-exports.listAllStudents = (req, res) => {
-  Student.find({}, (err, students) => {
-    if (err) {
-      return next(err);
-    } else {
-      console.log("students", students);
-      res.status(200).send(students);
-    }
-  });
+exports.listAllStudents = (req, res, next) => {
+    Student.find({}, (err, students) => {
+        if (err) {
+            return next(err);
+        } else {
+            console.log("students", students);
+            res.status(200).send(students);
+        }
+    });
 };
 exports.listAllStudentsByCourse = function (req, res, next) {
-  console.log("-> req.params.courseId", req.params.courseId);
-  Student.find(
-    {
-      courses: req.params.courseId,
-    },
-    (err, students) => {
-      if (err) {
-        return getErrorMessage(err);
-      }
-      console.log("there you go", students);
-      res.status(200).send(students);
-    }
-  );
+    Student.find({
+        courses: req.params.courseId
+    }, (err, students) => {
+        if (err) {
+            return next(err);
+        }
+        res.status(200).send(students);
+    });
 };
 
 exports.enrollStudentInCourse = (req, res, next) => {
@@ -296,3 +291,31 @@ exports.getAllCoursesByStudent = (req, res, next) => {
       }
     });
 };
+exports.isSignedIn = (req, res) => {
+    // Obtain the session token from the requests cookies,
+    // which come with every request
+    const token = req.cookies.token
+    console.log(token)
+    // if the cookie is not set, return 'auth'
+    if (!token) {
+        return res.send({ screen: 'auth' }).end();
+    }
+    var payload;
+    try {
+        // Parse the JWT string and store the result in `payload`.
+        // Note that we are passing the key in this method as well. This method will throw an error
+        // if the token is invalid (if it has expired according to the expiry time we set on sign in),
+        // or if the signature does not match
+        payload = jwt.verify(token, jwtKey)
+    } catch (e) {
+        if (e instanceof jwt.JsonWebTokenError) {
+            // the JWT is unauthorized, return a 401 error
+            return res.status(401).end()
+        }
+        // otherwise, return a bad request error
+        return res.status(400).end()
+    }
+
+    // Finally, token is ok, return the email given in the token
+    res.status(200).send({ screen: payload.email });
+}
