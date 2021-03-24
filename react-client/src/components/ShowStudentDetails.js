@@ -5,11 +5,13 @@ import Jumbotron from "react-bootstrap/Jumbotron";
 import Button from "react-bootstrap/Button";
 import { withRouter } from "react-router-dom";
 import ListGroup from "react-bootstrap/ListGroup";
+import Login from "./Login";
 
 function ShowUser(props) {
   const [data, setData] = useState({});
   const [courses, setCourses] = useState([]);
   const [showLoading, setShowLoading] = useState(true);
+  const [screen, setScreen] = useState("");
   const apiUrl = "http://localhost:3000/api/students/";
 
   useEffect(() => {
@@ -68,6 +70,13 @@ function ShowUser(props) {
       .catch((error) => setShowLoading(false));
   };
 
+  const logOut = async () => {
+    const res = await axios.get("/api/signout");
+    if (res.data.message === "signed out") {
+      props.history.push("/login");
+    }
+  };
+
   const showCourses = () => {
     props.history.push("/listCourses");
   };
@@ -120,6 +129,9 @@ function ShowUser(props) {
             </ListGroup>
             <Button variant="success" onClick={showCourses}>
               Enroll in a New Course
+            </Button>
+            <Button variant="danger" onClick={logOut}>
+              Log out
             </Button>
           </Jumbotron>
         </div>
