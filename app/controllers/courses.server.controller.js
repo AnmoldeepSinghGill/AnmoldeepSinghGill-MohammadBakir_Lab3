@@ -1,39 +1,38 @@
 const Course = require("mongoose").model("Course");
 
 exports.addCourse = (req, res, next) => {
-    const course = new Course(req.body);
-    console.log(req.body);
+  const course = new Course(req.body);
+  console.log(req.body);
 
-    course.save((err, course) => {
-        if (err) {
-            return next(err);
-        }
-        // Redirect the Student  back to the main application page
-        res.status(200).send(course);
-    });
+  course.save((err, course) => {
+    if (err) {
+      return next(err);
+    }
+    res.status(200).send(course);
+  });
 };
 
 exports.updateCourse = (req, res, next) => {
-    const course = new Course(req.body);
-    console.log(req.body);
+  const course = new Course(req.body);
+  console.log(req.body);
 
-    Course.findByIdAndUpdate(req.params.courseId, course, function (err, co) {
-        if (err) {
-            return next(err);
-        }
-    });
-        res.status(200).send(co);
+  Course.findByIdAndUpdate(req.params.courseId, course, function (err, co) {
+    if (err) {
+      return next(err);
+    }
+  });
+  res.status(200).send(co);
 };
 
 exports.listAllCourses = (req, res) => {
-    Course.find({}, (err, courses) => {
-        if (err) {
-            return next(err);
-        } else {
-            console.log("courses", courses);
-            res.status(200).send(courses);
-        }
-    });
+  Course.find({}, (err, courses) => {
+    if (err) {
+      return next(err);
+    } else {
+      console.log("courses", courses);
+      res.status(200).send(courses);
+    }
+  });
 };
 
 // 'courseById' controller method to find a course by its id
@@ -49,6 +48,16 @@ exports.courseById = function (req, res, next, id) {
       console.log(course);
       // Call the next middleware
       next();
+    }
+  });
+};
+
+exports.deleteCourse = (req, res, next) => {
+  Course.findByIdAndDelete(req.params.courseId, function (err) {
+    if (err) {
+      return next(err);
+    } else {
+      res.status(200).send({ messgae: "Succesfully Deleted" });
     }
   });
 };

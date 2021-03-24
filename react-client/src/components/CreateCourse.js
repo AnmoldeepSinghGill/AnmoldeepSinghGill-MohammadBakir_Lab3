@@ -18,7 +18,7 @@ function CreateCourse(props) {
   });
   const [showLoading, setShowLoading] = useState(false);
   //
-  const apiUrl = "http://localhost:3000/api/course";
+  const apiUrl = "http://localhost:3000/api/courses";
   //
   const saveCourse = (e) => {
     console.log(course);

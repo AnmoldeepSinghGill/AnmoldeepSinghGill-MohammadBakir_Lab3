@@ -9,29 +9,30 @@ import Button from "react-bootstrap/Button";
 function ListCourses(props) {
   const [courses, setCourses] = useState([]);
   const [showLoading, setShowLoading] = useState(true);
-  const apiUrl = "http://localhost:3000/api/courses";
+  const apiUrl = "http://localhost:3000/api/courses/";
 
   useEffect(() => {
-    const fetchData = async () => {
-      axios
-        .get(apiUrl)
-        .then((result) => {
-          console.log("result.data:", result.data);
-          //check if the user has logged in
-          //if(result.data.screen !== 'auth')
-          //{
-
-          console.log("data in if:", result.data);
-          setCourses(result.data);
-          setShowLoading(false);
-          //}
-        })
-        .catch((error) => {
-          console.log("error in fetchData:", error);
-        });
-    };
     fetchData();
   }, []);
+
+  const fetchData = async () => {
+    axios
+      .get(apiUrl)
+      .then((result) => {
+        console.log("result.data:", result.data);
+        //check if the user has logged in
+        //if(result.data.screen !== 'auth')
+        //{
+
+        console.log("data in if:", result.data);
+        setCourses(result.data);
+        setShowLoading(false);
+        //}
+      })
+      .catch((error) => {
+        console.log("error in fetchData:", error);
+      });
+  };
 
   const showDetail = (id) => {
     props.history.push({
@@ -45,7 +46,17 @@ function ListCourses(props) {
     });
   };
 
-  const deleteCourse = (id) => {};
+  const deleteCourse = (id) => {
+    axios
+      .delete(apiUrl + id)
+      .then((result) => {
+        setShowLoading(false);
+        fetchData();
+      })
+      .catch((error) => {
+        console.log("error in delet courses:", error);
+      });
+  };
 
   const addNewCourse = () => {
     props.history.push("/addCourse");
@@ -115,7 +126,7 @@ function ListCourses(props) {
                     Enroll Into Course
                   </Button>
                   <Button
-                    variant="success"
+                    variant="danger"
                     onClick={() => {
                       deleteCourse(item._id);
                     }}
