@@ -9,7 +9,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { withRouter } from "react-router-dom";
 
-function CreateUser(props) {
+function CreateStudent(props) {
   const [user, setUser] = useState({
     _id: "",
     firstName: "",
@@ -194,4 +194,4 @@ function CreateUser(props) {
   );
 }
 
-export default withRouter(CreateUser);
+export default withRouter(CreateStudent);

@@ -65,7 +65,7 @@ exports.authenticate = function (req, res, next) {
             maxAge: jwtExpirySeconds * 1000,
             httpOnly: true,
           });
-          res.status(200).send({ email: email });
+          res.status(200).send({ email: email, id: studentFound._id });
 
           //res.json({status:"success", message: "Student  found!!!", data:{Student :
           //Student , token:token}});
@@ -161,7 +161,7 @@ exports.isSignedIn = (req, res) => {
   }
 
   // Finally, token is ok, return the email given in the token
-  res.status(200).send({ screen: payload.email });
+  res.status(200).send({ screen: payload.email, id: payload.id });
 };
 
 exports.signout = (req, res) => {
@@ -241,18 +241,20 @@ exports.enrollStudentInCourse = (req, res, next) => {
 // 'studentByID' controller method to find a user by its id
 exports.studentById = function (req, res, next, id) {
   // Use the 'Student' static 'findById' method to retrieve a specific student
-  Student.findById(id, (err, student) => {
-    if (err) {
-      // Call the next middleware with an error message
-      return next(err);
-    } else {
-      // Set the 'req.student' property
-      req.student = student;
-      console.log("student found", student);
-      // Call the next middleware
-      next();
-    }
-  });
+  Student.findById(id)
+    .populate("courses")
+    .exec(function (err, student) {
+      if (err) {
+        // Call the next middleware with an error message
+        return next(err);
+      } else {
+        // Set the 'req.student' property
+        req.student = student;
+        console.log("student found", student);
+        // Call the next middleware
+        next();
+      }
+    });
 };
 
 exports.sendStudentFoundById = function (req, res) {

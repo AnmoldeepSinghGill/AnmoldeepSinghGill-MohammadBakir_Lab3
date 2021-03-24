@@ -4,9 +4,11 @@ import Spinner from "react-bootstrap/Spinner";
 import Jumbotron from "react-bootstrap/Jumbotron";
 import Button from "react-bootstrap/Button";
 import { withRouter } from "react-router-dom";
+import ListGroup from "react-bootstrap/ListGroup";
 
 function ShowUser(props) {
   const [data, setData] = useState({});
+  const [courses, setCourses] = useState([]);
   const [showLoading, setShowLoading] = useState(true);
   const apiUrl = "http://localhost:3000/api/students/" + props.match.params.id;
 
@@ -15,6 +17,7 @@ function ShowUser(props) {
     const fetchData = async () => {
       const result = await axios(apiUrl);
       setData(result.data);
+      setCourses(result.data.courses);
       setShowLoading(false);
     };
 
@@ -60,7 +63,7 @@ function ShowUser(props) {
         <p>Email: {data.email}</p>
         <p>Student Number: {data.studentNumber}</p>
 
-        <p>
+        {/* <p>
           <Button
             type="button"
             variant="primary"
@@ -80,7 +83,17 @@ function ShowUser(props) {
           >
             Delete
           </Button>
-        </p>
+        </p> */}
+
+        <p>Your Courses</p>
+        <ListGroup>
+          {courses.map((item, idx) => (
+            <ListGroup.Item key={idx} action>
+              {item._id}
+            </ListGroup.Item>
+          ))}
+        </ListGroup>
+        <Button variant="success">Add Course</Button>
       </Jumbotron>
     </div>
   );

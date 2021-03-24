@@ -7,10 +7,11 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import axios from "axios";
+import { withRouter } from "react-router-dom";
 //
 import View from "./View";
 //
-function App() {
+function App(props) {
   //state variable for the screen, admin or user
   const [screen, setScreen] = useState("auth");
   //store input field data, user name and password
@@ -27,12 +28,10 @@ function App() {
       const loginData = { auth: { email, password } };
       //call api
       const res = await axios.post(apiUrl, loginData);
-      console.log(res.data.auth);
-      console.log(res.data.screen);
       //process the response
-      if (res.data.screen !== undefined) {
-        setScreen(res.data.screen);
-        console.log(res.data.screen);
+      if (res.data.id !== undefined) {
+        props.history.push("/showStudentDetails/" + res.data.id);
+        console.log(res.data.id);
       }
     } catch (e) {
       //print the error
@@ -49,11 +48,14 @@ function App() {
       const res = await axios.get("/api/read_cookie");
       //
       if (res.data.screen !== undefined) {
-        setScreen(res.data.screen);
-        console.log(res.data.screen);
+        if (res.data.screen !== "auth") {
+          if (res.data.id) {
+            console.log(res.data.id);
+            props.history.push("/showStudentDetails/" + res.data.id);
+          }
+        }
       }
     } catch (e) {
-      setScreen("auth");
       console.log(e);
     }
   };
@@ -65,46 +67,42 @@ function App() {
   //
   return (
     <div className="App">
-      {screen === "auth" ? (
-        <div>
-          <Row>
-            <Col sm="2"></Col>
-            <Col sm="8">
-              <Form.Group>
-                <Form.Label>Email</Form.Label>
-                <Form.Control
-                  type="text"
-                  name="email"
-                  id="email"
-                  rows="3"
-                  placeholder="Enter email"
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </Form.Group>
-              <Form.Group>
-                <Form.Label>Password</Form.Label>
-                <Form.Control
-                  type="password"
-                  name="password"
-                  id="password"
-                  placeholder="Enter password"
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </Form.Group>
-            </Col>
-            <Col sm="2"></Col>
-          </Row>
-          <Row className="justify-content-center">
-            <Button variant="success" onClick={auth}>
-              Login
-            </Button>
-          </Row>
-        </div>
-      ) : (
-        <View screen={screen} setScreen={setScreen} />
-      )}
+      <div>
+        <Row>
+          <Col sm="2"></Col>
+          <Col sm="8">
+            <Form.Group>
+              <Form.Label>Email</Form.Label>
+              <Form.Control
+                type="text"
+                name="email"
+                id="email"
+                rows="3"
+                placeholder="Enter email"
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Password</Form.Label>
+              <Form.Control
+                type="password"
+                name="password"
+                id="password"
+                placeholder="Enter password"
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </Form.Group>
+          </Col>
+          <Col sm="2"></Col>
+        </Row>
+        <Row className="justify-content-center">
+          <Button variant="success" onClick={auth}>
+            Login
+          </Button>
+        </Row>
+      </div>
     </div>
   );
 }
 
-export default App;
+export default withRouter(App);
