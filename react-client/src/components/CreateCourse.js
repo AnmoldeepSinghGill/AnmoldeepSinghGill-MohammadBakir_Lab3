@@ -21,11 +21,12 @@ function CreateCourse(props) {
   const apiUrl = "http://localhost:3000/api/course";
   //
   const saveCourse = (e) => {
+    console.log(course);
     setShowLoading(true);
     e.preventDefault();
     const data = {
       courseCode: course.courseCode,
-      courseName: courseName,
+      courseName: course.courseName,
       section: course.section,
       semester: course.semester,
     };
@@ -35,7 +36,7 @@ function CreateCourse(props) {
       .then((result) => {
         setShowLoading(false);
         console.log("results from save course:", result.data);
-        // props.history.push("/showarticle/" + result.data._id);
+        props.history.push("/listCourses");
       })
       .catch((error) => setShowLoading(false));
   };
