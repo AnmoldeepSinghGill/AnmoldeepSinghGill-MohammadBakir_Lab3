@@ -14,7 +14,7 @@ exports.addCourse = (req, res) => {
     }
 
     // Redirect the Student  back to the main application page
-    res.status(200).send({ course: course });
+    res.status(200).send(course);
   });
 };
 

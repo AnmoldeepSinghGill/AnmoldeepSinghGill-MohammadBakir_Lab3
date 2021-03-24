@@ -4,7 +4,7 @@ const Course = require("mongoose").model("Course");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const config = require("../../config/config");
-const jwtExpirySeconds = 300;
+const jwtExpirySeconds = 3000;
 const jwtKey = config.secretKey;
 
 // Create a new error handling controller method

@@ -49,6 +49,10 @@ function ShowUser(props) {
       .catch((error) => setShowLoading(false));
   };
 
+  const showCourses = () => {
+    props.history.push("/listCourses");
+  };
+
   return (
     <div>
       {showLoading && (
@@ -93,7 +97,9 @@ function ShowUser(props) {
             </ListGroup.Item>
           ))}
         </ListGroup>
-        <Button variant="success">Add Course</Button>
+        <Button variant="success" onClick={showCourses}>
+          Enroll in a New Course
+        </Button>
       </Jumbotron>
     </div>
   );

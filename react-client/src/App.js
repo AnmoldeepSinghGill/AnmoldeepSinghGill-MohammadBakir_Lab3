@@ -13,13 +13,15 @@ import Nav from "react-bootstrap/Nav";
 import Button from "react-bootstrap/Button";
 import "./App.css";
 //
-import List from "./components/List";
+import ListStudents from "./components/ListStudents";
 import EditStudent from "./components/EditStudent";
 import EditArticle from "./components/EditArticle";
 
 import CreateStudent from "./components/CreateStudent";
 import ShowStudentDetail from "./components/ShowStudentDetails";
 import ShowArticle from "./components/ShowArticle";
+
+import ListCourses from "./components/ListCourses";
 
 import Home from "./components/Home";
 import Login from "./components/Login";
@@ -41,8 +43,8 @@ function App() {
             <Nav className="mr-auto">
               <Nav.Link href="/home">Home</Nav.Link>
               <Nav.Link href="/login">Login</Nav.Link>
-              <Nav.Link href="/list">List of Users</Nav.Link>
-              <Nav.Link href="/createStudent">Sign Up</Nav.Link>
+              <Nav.Link href="/listStudents">List All Students</Nav.Link>
+              <Nav.Link href="/signUp">Sign Up</Nav.Link>
               <Logout />
             </Nav>
           </Navbar.Collapse>
@@ -51,15 +53,16 @@ function App() {
         <div>
           <Route render={() => <Home />} path="/home" />
           <Route render={() => <Login />} path="/login" />
-          <Route render={() => <List />} path="/list" />
+          <Route render={() => <ListStudents />} path="/listStudents" />
           <Route render={() => <EditStudent />} path="/editStudent/:id" />
-          <Route render={() => <CreateStudent />} path="/createStudent" />
+          <Route render={() => <CreateStudent />} path="/signUp" />
           <Route
             render={() => <ShowStudentDetail />}
             path="/showStudentDetails/:id"
           />
           <Route render={() => <ShowArticle />} path="/showarticle/:id" />
           <Route render={() => <EditArticle />} path="/editarticle/:id" />
+          <Route render={() => <ListCourses />} path="/listCourses" />
         </div>
       </div>
     </Router>
