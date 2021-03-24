@@ -47,6 +47,12 @@ function ListCourses(props) {
 
   const deleteCourse = (id) => {};
 
+  const editCourse = (id) => {
+    props.history.push({
+      pathname: "/editCourse/" + id,
+    });
+  };
+
   const addNewCourse = () => {
     props.history.push("/addCourse");
   };
@@ -113,6 +119,14 @@ function ListCourses(props) {
                     }}
                   >
                     Enroll Into Course
+                  </Button>
+                  <Button
+                      variant="success"
+                      onClick={() => {
+                        editCourse(item._id);
+                      }}
+                  >
+                    Edit Course
                   </Button>
                   <Button
                     variant="success"

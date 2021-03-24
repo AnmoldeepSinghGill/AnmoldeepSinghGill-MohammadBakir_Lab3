@@ -16,13 +16,18 @@ exports.addCourse = (req, res, next) => {
 exports.updateCourse = (req, res, next) => {
     const course = new Course(req.body);
     console.log(req.body);
-
-    Course.findByIdAndUpdate(req.params.courseId, course, function (err, co) {
+    var courseToUpdate = {
+        courseCode: req.body.courseCode,
+        courseName: req.body.courseName,
+        section: req.body.section,
+        semester: req.body.semester,
+    }
+    Course.findOneAndUpdate({_id : req.params.courseId}, courseToUpdate, {useFindAndModify: false}, (err, co) => {
         if (err) {
             return next(err);
         }
-    });
         res.status(200).send(co);
+    });
 };
 
 exports.listAllCourses = (req, res) => {
@@ -52,3 +57,20 @@ exports.courseById = function (req, res, next, id) {
     }
   });
 };
+
+// 'courseById' controller method to find a course by its id
+exports.getCourseById = function (req, res, next) {
+    // Use the 'Course' static 'findById' method to retrieve a specific student
+    Course.findById(req.params.courseId, (err, course) => {
+        if (err) {
+            // Call the next middleware with an error message
+            return next(err);
+        } else {
+            // Set the 'req.course' property
+            res.status(200).send(course);
+            // Call the next middleware
+            next();
+        }
+    });
+};
+

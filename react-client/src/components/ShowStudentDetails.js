@@ -5,8 +5,10 @@ import Jumbotron from "react-bootstrap/Jumbotron";
 import Button from "react-bootstrap/Button";
 import { withRouter } from "react-router-dom";
 import ListGroup from "react-bootstrap/ListGroup";
+import Login from "./Login";
 
 function ShowUser(props) {
+  const [screen, setScreen] = useState("");
   const [data, setData] = useState({});
   const [courses, setCourses] = useState([]);
   const [showLoading, setShowLoading] = useState(true);

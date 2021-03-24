@@ -15,7 +15,6 @@ function Home(props) {
         if (res.data.screen !== "auth") {
           if (res.data.id) {
             setScreen("signedIn");
-            console.log(status);
           }
         } else {
           setScreen("signedOut");

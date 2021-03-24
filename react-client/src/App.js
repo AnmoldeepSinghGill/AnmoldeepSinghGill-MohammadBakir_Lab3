@@ -27,6 +27,7 @@ import CreateCourse from "./components/CreateCourse";
 import Home from "./components/Home";
 import Login from "./components/Login";
 import Logout from "./components/Logout";
+import EditCourse from "./components/EditCourse";
 
 function App() {
   return (
@@ -65,6 +66,7 @@ function App() {
           <Route render={() => <EditArticle />} path="/editarticle/:id" />
           <Route render={() => <ListCourses />} path="/listCourses" />
           <Route render={() => <CreateCourse />} path="/addCourse" />
+          <Route render={() => <EditCourse />} path="/editCourse/:id" />
         </div>
       </div>
     </Router>
