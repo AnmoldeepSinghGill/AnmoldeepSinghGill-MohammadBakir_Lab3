@@ -9,78 +9,101 @@ import React, { useState } from "react";
 //
 function CreateCourse(props) {
   //
-  const username = props.screen;
-  console.log("props.screen", props.screen);
-  const [article, setArticle] = useState({
+  const [course, setCourse] = useState({
     _id: "",
-    title: "",
-    content: "",
-    username: "",
+    courseCode: "",
+    courseName: "",
+    section: "",
+    semester: "",
   });
   const [showLoading, setShowLoading] = useState(false);
   //
-  const apiUrl = "http://localhost:3000/api/articles";
+  const apiUrl = "http://localhost:3000/api/course";
   //
-  const saveArticle = (e) => {
+  const saveCourse = (e) => {
     setShowLoading(true);
     e.preventDefault();
     const data = {
-      title: article.title,
-      content: article.content,
-      username: username,
+      courseCode: course.courseCode,
+      courseName: courseName,
+      section: course.section,
+      semester: course.semester,
     };
     //
     axios
       .post(apiUrl, data)
       .then((result) => {
         setShowLoading(false);
-        console.log("results from save article:", result.data);
-        props.history.push("/showarticle/" + result.data._id);
+        console.log("results from save course:", result.data);
+        // props.history.push("/showarticle/" + result.data._id);
       })
       .catch((error) => setShowLoading(false));
   };
   //
   const onChange = (e) => {
     e.persist();
-    setArticle({ ...article, [e.target.name]: e.target.value });
+    setCourse({ ...course, [e.target.name]: e.target.value });
   };
 
   return (
     <div>
-      <h2> Create an article {username} </h2>
+      <h2> Add a New Course</h2>
       {showLoading && (
         <Spinner animation="border" role="status">
           <span className="sr-only">Loading...</span>
         </Spinner>
       )}
       <Jumbotron>
-        <Form onSubmit={saveArticle}>
+        <Form onSubmit={saveCourse}>
           <Form.Group>
-            <Form.Label> Title</Form.Label>
+            <Form.Label> Course Code</Form.Label>
             <Form.Control
               type="text"
-              name="title"
-              id="title"
-              placeholder="Enter title"
-              value={article.title}
+              name="courseCode"
+              id="courseCode"
+              placeholder="Enter Course Code"
+              value={course.courseCode}
               onChange={onChange}
             />
           </Form.Group>
           <Form.Group>
-            <Form.Label> Content</Form.Label>
+            <Form.Label> Course Name</Form.Label>
             <Form.Control
-              as="textarea"
-              rows="3"
-              name="content"
-              id="content"
-              placeholder="Enter Content"
-              value={article.content}
+              type="text"
+              name="courseName"
+              id="courseName"
+              placeholder="Enter Course Name"
+              value={course.courseName}
+              onChange={onChange}
+            />
+          </Form.Group>
+
+          <Form.Group>
+            <Form.Label> Section</Form.Label>
+            <Form.Control
+              type="text"
+              name="section"
+              id="section"
+              placeholder="Enter Section"
+              value={course.section}
+              onChange={onChange}
+            />
+          </Form.Group>
+
+          <Form.Group>
+            <Form.Label> Semester</Form.Label>
+            <Form.Control
+              type="text"
+              name="semester"
+              id="semester"
+              placeholder="Enter Semester"
+              value={course.semester}
               onChange={onChange}
             />
           </Form.Group>
 
           <Button variant="primary" type="submit">
-            Save Article
+            Save Course
           </Button>
         </Form>
       </Jumbotron>
