@@ -30,7 +30,7 @@ function App(props) {
       const res = await axios.post(apiUrl, loginData);
       //process the response
       if (res.data.id !== undefined) {
-        props.history.push("/showStudentDetails/" + res.data.id);
+        props.history.push("/showStudentDetails");
         console.log(res.data.id);
       }
     } catch (e) {

@@ -47,6 +47,10 @@ function ListCourses(props) {
 
   const deleteCourse = (id) => {};
 
+  const addNewCourse = () => {
+    props.history.push("/addCourse");
+  };
+
   //check if the user already logged-in
   // const readCookie = async () => {
   //   try {
@@ -81,6 +85,9 @@ function ListCourses(props) {
             <span className="sr-only">Loading...</span>
           </Spinner>
         )}
+        <Button variant="success" onClick={addNewCourse}>
+          Add New Course
+        </Button>
         <table className="table">
           <thead>
             <tr>

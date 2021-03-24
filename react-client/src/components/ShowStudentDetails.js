@@ -10,18 +10,37 @@ function ShowUser(props) {
   const [data, setData] = useState({});
   const [courses, setCourses] = useState([]);
   const [showLoading, setShowLoading] = useState(true);
-  const apiUrl = "http://localhost:3000/api/students/" + props.match.params.id;
+  const apiUrl = "http://localhost:3000/api/students/";
 
   useEffect(() => {
     setShowLoading(false);
-    const fetchData = async () => {
-      const result = await axios(apiUrl);
+    const fetchData = async (id) => {
+      const result = await axios(apiUrl + id);
       setData(result.data);
       setCourses(result.data.courses);
       setShowLoading(false);
     };
 
-    fetchData();
+    // checking if the user is signed in
+    const readCookieAndGetStudentDetails = async () => {
+      try {
+        const res = await axios.get("/api/read_cookie");
+
+        if (res.data.screen) {
+          if (res.data.screen !== "auth") {
+            if (res.data.id) {
+              fetchData(res.data.id);
+            }
+          } else {
+            setScreen("signedOut");
+          }
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    };
+
+    readCookieAndGetStudentDetails();
   }, []);
 
   const editUser = (id) => {
@@ -55,19 +74,21 @@ function ShowUser(props) {
 
   return (
     <div>
-      {showLoading && (
-        <Spinner animation="border" role="status">
-          <span className="sr-only">Loading...</span>
-        </Spinner>
-      )}
-      <Jumbotron>
-        <h1>
-          Name: {data.firstName}, {data.lastName}
-        </h1>
-        <p>Email: {data.email}</p>
-        <p>Student Number: {data.studentNumber}</p>
+      {screen !== "signedOut" ? (
+        <div>
+          {showLoading && (
+            <Spinner animation="border" role="status">
+              <span className="sr-only">Loading...</span>
+            </Spinner>
+          )}
+          <Jumbotron>
+            <h1>
+              Name: {data.firstName}, {data.lastName}
+            </h1>
+            <p>Email: {data.email}</p>
+            <p>Student Number: {data.studentNumber}</p>
 
-        {/* <p>
+            {/* <p>
           <Button
             type="button"
             variant="primary"
@@ -89,18 +110,22 @@ function ShowUser(props) {
           </Button>
         </p> */}
 
-        <p>Your Courses</p>
-        <ListGroup>
-          {courses.map((item, idx) => (
-            <ListGroup.Item key={idx} action>
-              {item._id}
-            </ListGroup.Item>
-          ))}
-        </ListGroup>
-        <Button variant="success" onClick={showCourses}>
-          Enroll in a New Course
-        </Button>
-      </Jumbotron>
+            <p>Your Courses</p>
+            <ListGroup>
+              {courses.map((item, idx) => (
+                <ListGroup.Item key={idx} action>
+                  {item._id}
+                </ListGroup.Item>
+              ))}
+            </ListGroup>
+            <Button variant="success" onClick={showCourses}>
+              Enroll in a New Course
+            </Button>
+          </Jumbotron>
+        </div>
+      ) : (
+        <Login />
+      )}
     </div>
   );
 }
