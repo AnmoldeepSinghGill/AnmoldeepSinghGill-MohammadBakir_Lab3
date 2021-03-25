@@ -6,124 +6,201 @@ import { withRouter } from "react-router-dom";
 import Login from "./Login";
 import Button from "react-bootstrap/Button";
 
+/*
+ * Name: Anmoldeep Singh Gill, Mohammad bakir
+ * Student Number: 301044883, 300987420
+ */
+
 function ListCourses(props) {
   const [courses, setCourses] = useState([]);
+  const [state, setState] = useState("");
   const [showLoading, setShowLoading] = useState(true);
-  const apiUrl = "http://localhost:3000/api/courses";
+  const [studentId, setStudentId] = useState("");
+  const [error, setError] = useState("");
+  const apiUrl = "http://localhost:3000/api/courses/";
+  const enrollCourseUrl = "http://localhost:3000/api/enrollCourse/";
 
   useEffect(() => {
-    const fetchData = async () => {
-      axios
-        .get(apiUrl)
-        .then((result) => {
-          console.log("result.data:", result.data);
-          //check if the user has logged in
-          //if(result.data.screen !== 'auth')
-          //{
-
-          console.log("data in if:", result.data);
-          setCourses(result.data);
-          setShowLoading(false);
-          //}
-        })
-        .catch((error) => {
-          console.log("error in fetchData:", error);
-        });
-    };
     fetchData();
   }, []);
 
-  const showDetail = (id) => {
+  // fetches the list of all the courses
+  const fetchData = async () => {
+    axios
+      .get(apiUrl)
+      .then((result) => {
+        console.log("result.data:", result.data);
+        //check if the user has logged in
+        if (result.data.screen !== "auth") {
+          console.log("data in if:", result.data);
+          setCourses(result.data.courses);
+          console.log(result.data.loggenInId);
+          setStudentId(result.data.loggenInId);
+          setShowLoading(false);
+        } else {
+          setState("signedOut");
+        }
+      })
+      .catch((error) => {
+        console.log("error in fetchData:", error);
+      });
+  };
+
+  // adds the course in the student profile if already not present
+  const enrollInCourse = (courseId) => {
+    if (studentId) {
+      axios
+        .put(enrollCourseUrl + studentId + "/" + courseId)
+        .then((result) => {
+          setShowLoading(false);
+          props.history.push("/showStudentDetails/");
+        })
+        .catch((error) => {
+          console.log("error in enroll courses:", error);
+          if (error.response.data.message) {
+            setError(error.response.data.message);
+          }
+        });
+    } else {
+      setState("signedOut");
+    }
+  };
+
+  // deletes a course by provided id
+  const deleteCourse = (id) => {
+    axios
+      .delete(apiUrl + id)
+      .then((result) => {
+        setShowLoading(false);
+        fetchData();
+      })
+      .catch((error) => {
+        console.log("error in delete courses:", error);
+      });
+  };
+
+  // navigate to edit course view
+  const editCourse = (id) => {
     props.history.push({
-      pathname: "/showarticle/" + id,
+      pathname: "/editCourse/" + id,
     });
   };
 
-  const enrollInCourse = (id) => {
-    props.history.push({
-      pathname: "/showarticle/" + id,
-    });
+  // navigate to add new course view
+  const addNewCourse = () => {
+    props.history.push("/addCourse");
   };
 
-  const deleteCourse = (id) => {};
-
-  //check if the user already logged-in
-  // const readCookie = async () => {
-  //   try {
-  //     console.log("--- in readCookie function ---");
-
-  //     //
-  //     const res = await axios.get("/api/read_cookie");
-  //     //
-  //     if (res.data.screen !== undefined) {
-  //       if (res.data.screen !== "auth") {
-  //         if (res.data.id) {
-  //           console.log(res.data.id);
-  //           props.history.push("/showStudentDetails/" + res.data.id);
-  //         }
-  //       }
-  //     }
-  //   } catch (e) {
-  //     console.log(e);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   readCookie();
-  // }, []);
+  // navigate to list all students in a course view
+  const listStudentsEnrolled = (id) => {
+    props.history.push("/listStudentInCourse/" + id);
+  };
 
   return (
     <div>
-      {/* {courses.length !== 0 ? ( */}
-      <div>
-        {showLoading && (
-          <Spinner animation="border" role="status">
-            <span className="sr-only">Loading...</span>
-          </Spinner>
-        )}
-        <table className="table">
-          <thead>
-            <tr>
-              <th>Course Code</th>
-              <th>Course Name</th>
-              <th>Section</th>
-              <th>Semester</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {courses.map((item, idx) => (
-              <tr key={idx}>
-                <td>{item.courseCode}</td>
-                <td>{item.courseName}</td>
-                <td>{item.section}</td>
-                <td>{item.semester}</td>
-                <td>
-                  <Button
-                    variant="success"
-                    onClick={() => {
-                      enrollInCourse(item._id);
-                    }}
-                  >
-                    Enroll Into Course
-                  </Button>
-                  <Button
-                    variant="success"
-                    onClick={() => {
-                      deleteCourse(item._id);
-                    }}
-                  >
-                    Delete Course
-                  </Button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      {/* ) : (
+      {state !== "signedOut" ? (
+        <div>
+          {showLoading && (
+            <Spinner animation="border" role="status">
+              <span className="sr-only">Loading...</span>
+            </Spinner>
+          )}
+          {error !== "" && (
+            <div className="alert alert-danger" role="alert">
+              {error}
+            </div>
+          )}
+          <div
+            className="row justify-content-center"
+            style={{ marginTop: "20px" }}
+          >
+            <h1>All Courses</h1>
+          </div>
+          <div
+            className="row justify-content-end profileButtons"
+            style={{ padding: "0 15px 20px 0" }}
+          >
+            <Button variant="success" onClick={addNewCourse}>
+              Add New Course
+            </Button>
+          </div>
+          {courses.map((course, idx) => (
+            <div className="row justify-content-center" key={idx}>
+              <div className="col-sm-12">
+                <div className="card">
+                  <div className="card-body">
+                    <h3 className="card-title">{course.courseName}</h3>
+                    <div className="row">
+                      <div className="col-6">
+                        <b>Code: </b> {course.courseCode}
+                        <br />
+                        <b>Section: </b> {course.section}
+                        <br />
+                        <b>Semester: </b> {course.semester}
+                      </div>
+                      <div
+                        className="col-3"
+                        style={{ borderRight: "1px solid #b1a9a9" }}
+                      >
+                        <div className="row justify-content-center">
+                          <Button
+                            variant="success"
+                            onClick={() => {
+                              enrollInCourse(course._id);
+                            }}
+                          >
+                            Enroll Into this Course
+                          </Button>
+                        </div>
+                        <div
+                          className="row justify-content-center"
+                          style={{ marginTop: "15px" }}
+                        >
+                          <Button
+                            variant="success"
+                            onClick={() => {
+                              listStudentsEnrolled(course._id);
+                            }}
+                          >
+                            List Students Enrolled
+                          </Button>
+                        </div>
+                      </div>
+                      <div className="col-3">
+                        <div className="row justify-content-center">
+                          <Button
+                            variant="warning"
+                            onClick={() => {
+                              editCourse(course._id);
+                            }}
+                          >
+                            Edit Course
+                          </Button>
+                        </div>
+                        <div
+                          className="row justify-content-center"
+                          style={{ marginTop: "15px" }}
+                        >
+                          <button
+                            className="btn btn-danger"
+                            onClick={() => {
+                              deleteCourse(course._id);
+                            }}
+                          >
+                            Delete Course
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
         <Login />
-      )} */}
+      )}
     </div>
   );
 }

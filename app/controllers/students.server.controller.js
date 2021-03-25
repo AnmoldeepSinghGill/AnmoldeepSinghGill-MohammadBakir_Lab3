@@ -4,8 +4,13 @@ const Course = require("mongoose").model("Course");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const config = require("../../config/config");
-const jwtExpirySeconds = 3000;
+const jwtExpirySeconds = 300;
 const jwtKey = config.secretKey;
+
+/*
+ * Name: Anmoldeep Singh Gill, Mohammad bakir
+ * Student Number: 301044883, 300987420
+ */
 
 // Create a new error handling controller method
 const getErrorMessage = function (err) {
@@ -35,10 +40,13 @@ const getErrorMessage = function (err) {
   return message;
 };
 
+// used for sign in
+// authenticates and creates jwt to save in cookies
 exports.authenticate = function (req, res, next) {
   // Get credentials from request body
   const { email, password } = req.body.auth;
   console.log(email);
+  console.log(password);
   //find the Student  with given email using static method findOne
   Student.findOne({ email: email }, (err, studentFound) => {
     if (err) {
@@ -47,6 +55,9 @@ exports.authenticate = function (req, res, next) {
       console.log(studentFound);
       if (studentFound) {
         //compare passwords
+        console.log(bcrypt.hashSync(password, 10));
+        console.log(studentFound.password);
+        console.log(bcrypt.compareSync(password, studentFound.password));
         if (bcrypt.compareSync(password, studentFound.password)) {
           // Create a new token with the Student  id in the payload
           // and which expires 300 seconds after issue
@@ -73,14 +84,14 @@ exports.authenticate = function (req, res, next) {
           //call the next middleware
           next();
         } else {
-          res.json({
+          res.status(401).send({
             status: "error",
             message: "Invalid Email or Password",
             data: null,
           });
         }
       } else {
-        res.json({
+        res.status(401).send({
           status: "error",
           message: "Invalid Email or Password",
           data: null,
@@ -88,50 +99,6 @@ exports.authenticate = function (req, res, next) {
       }
     }
   });
-};
-
-// exports.verifyStudent = function (req, res, next) {
-//   jwt.verify(req.headers["x-access-token"], jwtKey, function (err, decoded) {
-//     if (err) {
-//       res.json({ status: "error", message: err.message, data: null });
-//     } else {
-//       // add Student  id to request
-//       req.body.StudentId = decoded.id;
-//       next();
-//     }
-//   });
-// };
-
-// protected page uses the JWT token
-exports.welcome = (req, res) => {
-  // We can obtain the session token from the requests cookies,
-  // which come with every request
-  const token = req.cookies.token;
-
-  // if the cookie is not set, return an unauthorized error
-  if (!token) {
-    return res.status(401).end();
-  }
-
-  var payload;
-  try {
-    // Parse the JWT string and store the result in `payload`.
-    // Note that we are passing the key in this method as well. This method will throw an error
-    // if the token is invalid (if it has expired according to the expiry time we set on sign in),
-    // or if the signature does not match
-    payload = jwt.verify(token, jwtKey);
-  } catch (e) {
-    if (e instanceof jwt.JsonWebTokenError) {
-      // if the error thrown is because the JWT is unauthorized, return a 401 error
-      return res.status(401).end();
-    }
-    // otherwise, return a bad request error
-    return res.status(400).end();
-  }
-
-  // Finally, return the welcome message to the Student , along with their
-  // Student name given in the token
-  res.send(`Welcome Student  with ID: ${payload.id}!`);
 };
 
 //check if the user is signed in
@@ -151,6 +118,7 @@ exports.isSignedIn = (req, res) => {
     // if the token is invalid (if it has expired according to the expiry time we set on sign in),
     // or if the signature does not match
     payload = jwt.verify(token, jwtKey);
+    console.log("payload", payload);
   } catch (e) {
     if (e instanceof jwt.JsonWebTokenError) {
       // the JWT is unauthorized, return a 401 error
@@ -160,7 +128,8 @@ exports.isSignedIn = (req, res) => {
     return res.status(400).end();
   }
 
-  // Finally, token is ok, return the email given in the token
+  console.log("payload", payload);
+  // Finally, token is ok, return the email and id given in the token
   res.status(200).send({ screen: payload.email, id: payload.id });
 };
 
@@ -171,6 +140,7 @@ exports.signout = (req, res) => {
   //res.redirect('/');
 };
 
+// sign up for student registration
 exports.signUp = (req, res) => {
   const student = new Student(req.body);
   console.log(req.body);
@@ -191,45 +161,61 @@ exports.signUp = (req, res) => {
   });
 };
 
+// list all students
 exports.listAllStudents = (req, res, next) => {
-    Student.find({}, (err, students) => {
-        if (err) {
-            return next(err);
-        } else {
-            console.log("students", students);
-            res.status(200).send(students);
-        }
-    });
-};
-exports.listAllStudentsByCourse = function (req, res, next) {
-    Student.find({
-        courses: req.params.courseId
-    }, (err, students) => {
-        if (err) {
-            return next(err);
-        }
-        res.status(200).send(students);
-    });
+  Student.find({}, (err, students) => {
+    if (err) {
+      return next(err);
+    } else {
+      console.log("students", students);
+      res.status(200).send(students);
+    }
+  });
 };
 
+// list all students enrolled in a course
+exports.listAllStudentsByCourse = function (req, res, next) {
+  Student.find(
+    {
+      courses: req.params.courseId,
+    },
+    (err, students) => {
+      if (err) {
+        return next(err);
+      }
+      res.status(200).send(students);
+    }
+  );
+};
+
+// enroll a student in a course
 exports.enrollStudentInCourse = (req, res, next) => {
   const student = req.student;
   const course = req.course;
 
+  // checking if a student already enrolled in the course
   if (student && course) {
-    if (student.courses.includes(req.params.courseId)) {
+    if (student.courses.some((c) => c._id == req.params.courseId)) {
       console.log("already enrolled");
-      return next("Patient already enrolled into the course.");
+      res
+        .status(500)
+        .send({ message: "Student already enrolled into the course." });
+    } else {
+      student.courses.push(course);
+
+      // updating courses of student to enroll a student in course
+      Student.findByIdAndUpdate(
+        student._id,
+        { courses: student.courses },
+        (err, studentResult) => {
+          if (err) {
+            return res.status(500).send({ error: err }).end();
+          } else {
+            res.status(200).send(studentResult);
+          }
+        }
+      );
     }
-    //TODO add the validation for course already exists
-    student.courses.push(course);
-    student.save((err, studentResult) => {
-      if (err) {
-        return next(err);
-      } else {
-        res.status(200).send(studentResult);
-      }
-    });
   }
 };
 
@@ -252,6 +238,7 @@ exports.studentById = function (req, res, next, id) {
     });
 };
 
+// get student by Idand send to route
 exports.sendStudentFoundById = function (req, res) {
   console.log("student", req.student);
   if (req.student) {
@@ -261,13 +248,13 @@ exports.sendStudentFoundById = function (req, res) {
   }
 };
 
+// drop a course by student id
 exports.dropCourseByStudentId = (req, res, next) => {
   const student = req.student;
   const courseId = req.params.courseId;
 
   if (student && courseId) {
-    student.courses = student.courses.filter((c) => c != courseId);
-    console.log(student.courses);
+    student.courses = student.courses.filter((c) => c._id != courseId);
     student.save((err, studentResult) => {
       if (err) {
         return next(err);
@@ -291,31 +278,36 @@ exports.getAllCoursesByStudent = (req, res, next) => {
       }
     });
 };
-exports.isSignedIn = (req, res) => {
-    // Obtain the session token from the requests cookies,
-    // which come with every request
-    const token = req.cookies.token
-    console.log(token)
-    // if the cookie is not set, return 'auth'
-    if (!token) {
-        return res.send({ screen: 'auth' }).end();
-    }
-    var payload;
-    try {
-        // Parse the JWT string and store the result in `payload`.
-        // Note that we are passing the key in this method as well. This method will throw an error
-        // if the token is invalid (if it has expired according to the expiry time we set on sign in),
-        // or if the signature does not match
-        payload = jwt.verify(token, jwtKey)
-    } catch (e) {
-        if (e instanceof jwt.JsonWebTokenError) {
-            // the JWT is unauthorized, return a 401 error
-            return res.status(401).end()
-        }
-        // otherwise, return a bad request error
-        return res.status(400).end()
-    }
 
-    // Finally, token is ok, return the email given in the token
-    res.status(200).send({ screen: payload.email });
-}
+//check if the student is signed in
+exports.loginGuard = (req, res, next) => {
+  // Obtain the session token from the requests cookies,
+  // which come with every request
+  const token = req.cookies.token;
+  console.log(token);
+  // if the cookie is not set, return 'auth'
+  if (!token) {
+    return res.send({ screen: "auth" }).end();
+  }
+  var payload;
+  try {
+    // Parse the JWT string and store the result in `payload`.
+    // Note that we are passing the key in this method as well. This method will throw an error
+    // if the token is invalid (if it has expired according to the expiry time we set on sign in),
+    // or if the signature does not match
+    payload = jwt.verify(token, jwtKey);
+    req.id = payload.id;
+    console.log("payload", payload);
+  } catch (e) {
+    if (e instanceof jwt.JsonWebTokenError) {
+      // the JWT is unauthorized, return a 401 error
+      return res.status(401).end();
+    }
+    // otherwise, return a bad request error
+    return res.status(400).end();
+  }
+
+  console.log("payload", payload);
+  // next
+  next();
+};

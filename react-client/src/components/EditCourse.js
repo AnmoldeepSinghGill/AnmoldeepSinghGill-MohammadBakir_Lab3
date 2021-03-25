@@ -4,16 +4,29 @@ import Jumbotron from "react-bootstrap/Jumbotron";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { withRouter } from "react-router-dom";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 /*
  * Name: Anmoldeep Singh Gill, Mohammad bakir
  * Student Number: 301044883, 300987420
  */
 
-//
-function CreateCourse(props) {
-  //
+function EditCourse(props) {
+  useEffect(() => {
+    const fetchData = async () => {
+      axios
+        .get("http://localhost:3000/api/getCourse/" + props.match.params.id)
+        .then((result) => {
+          console.log("result.data:", result.data);
+          setCourse(result.data);
+        })
+        .catch((error) => {
+          console.log("error in fetchData:", error);
+        });
+    };
+    fetchData();
+  }, []);
+
   const [course, setCourse] = useState({
     _id: "",
     courseCode: "",
@@ -21,11 +34,14 @@ function CreateCourse(props) {
     section: "",
     semester: "",
   });
+  console.log("-> course", course);
+
   const [showLoading, setShowLoading] = useState(false);
   //
-  const apiUrl = "http://localhost:3000/api/course";
+  const apiUrl = "http://localhost:3000/api/course/";
+  //
 
-  // saves the course
+  // save the edited data of course
   const saveCourse = (e) => {
     console.log(course);
     setShowLoading(true);
@@ -36,12 +52,11 @@ function CreateCourse(props) {
       section: course.section,
       semester: course.semester,
     };
-
     axios
-      .post(apiUrl, data)
+      .put(apiUrl + course._id, data)
       .then((result) => {
         setShowLoading(false);
-        console.log("results from save course:", result.data);
+        console.log("results from edit course:", result.data);
         props.history.push("/listCourses");
       })
       .catch((error) => setShowLoading(false));
@@ -56,7 +71,7 @@ function CreateCourse(props) {
   return (
     <div>
       <div className="row justify-content-center" style={{ marginTop: "20px" }}>
-        <h2> Add a New Course</h2>
+        <h2> Edit Course</h2>
       </div>
       {showLoading && (
         <Spinner animation="border" role="status">
@@ -118,7 +133,7 @@ function CreateCourse(props) {
 
           <div className="row justify-content-center">
             <Button variant="success" type="submit">
-              Save Course
+              Update Course
             </Button>
           </div>
         </Form>
@@ -127,4 +142,4 @@ function CreateCourse(props) {
   );
 }
 
-export default withRouter(CreateCourse);
+export default withRouter(EditCourse);

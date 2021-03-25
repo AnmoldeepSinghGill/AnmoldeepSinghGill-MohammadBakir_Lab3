@@ -11,18 +11,50 @@ import Button from "react-bootstrap/Button";
  * Student Number: 301044883, 300987420
  */
 
-function ListStudents(props) {
+function ListStudentsInCourse(props) {
   const [students, setStudents] = useState([]);
+  const [course, setCourse] = useState({
+    _id: "",
+    courseCode: "",
+    courseName: "",
+    section: "",
+    semester: "",
+  });
   const [state, setState] = useState("");
   const [showLoading, setShowLoading] = useState(true);
   const [error, setError] = useState("");
-  const apiUrl = "http://localhost:3000/api/students/";
+  const apiUrl =
+    "http://localhost:3000/api/studentsByCourse/" + props.match.params.id;
+  const courseApiUrl =
+    "http://localhost:3000/api/getCourse/" + props.match.params.id;
 
   useEffect(() => {
     fetchData();
+    fetchCourseData();
   }, []);
 
-  // fetches the list of all the students
+  // fetch the course data by id paramenters
+  const fetchCourseData = async () => {
+    axios
+      .get(courseApiUrl)
+      .then((result) => {
+        console.log("result.data:", result.data);
+        //check if the user has logged in
+        if (result.data.screen !== "auth") {
+          console.log("data in if:", result.data);
+          setCourse(result.data);
+          setShowLoading(false);
+        } else {
+          setState("signedOut");
+        }
+      })
+      .catch((error) => {
+        setShowLoading(false);
+        console.log("error in fetchData:", error);
+      });
+  };
+
+  // fetch the students enrolled in the course by course id
   const fetchData = async () => {
     axios
       .get(apiUrl)
@@ -38,6 +70,7 @@ function ListStudents(props) {
         }
       })
       .catch((error) => {
+        setShowLoading(false);
         console.log("error in fetchData:", error);
       });
   };
@@ -58,9 +91,11 @@ function ListStudents(props) {
           )}
           <div
             className="row justify-content-center"
-            style={{ marginTop: "25px", marginBottom: "25px" }}
+            style={{ marginTop: "35px", marginBottom: "35px" }}
           >
-            <h2>All Students</h2>
+            <h2>
+              All Students Enrolled in {course.courseName} ({course.courseCode})
+            </h2>
           </div>
           <table className="table">
             <thead>
@@ -98,4 +133,4 @@ function ListStudents(props) {
   );
 }
 //
-export default withRouter(ListStudents);
+export default withRouter(ListStudentsInCourse);

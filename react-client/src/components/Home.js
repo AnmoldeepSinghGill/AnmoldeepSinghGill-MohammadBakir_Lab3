@@ -1,19 +1,41 @@
 import { withRouter } from "react-router-dom";
+import ShowStudentDetail from "./ShowStudentDetails";
+import React, { useState, useEffect } from "react";
+import Login from "./Login";
+import axios from "axios";
 
-import React, { Component } from "react";
+/*
+ * Name: Anmoldeep Singh Gill, Mohammad bakir
+ * Student Number: 301044883, 300987420
+ */
 
 function Home(props) {
-  return (
-    <div>
-      <h2>Student Course System</h2>
-      <a href="/login" class="btn btn-success">
-        Login
-      </a>
-      <a href="/signUp" class="btn btn-success">
-        Sign Up
-      </a>
-    </div>
-  );
+  const [screen, setScreen] = useState("");
+  // checking if the user is signed in
+  // unless navigate to user profile
+  const readCookie = async () => {
+    try {
+      const res = await axios.get("/api/read_cookie");
+
+      if (res.data.screen) {
+        if (res.data.screen !== "auth") {
+          if (res.data.id) {
+            setScreen("signedIn");
+          }
+        } else {
+          setScreen("signedOut");
+        }
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  useEffect(() => {
+    readCookie();
+  }, []);
+
+  return <div>{screen === "signedIn" ? <ShowStudentDetail /> : <Login />}</div>;
 }
 
 export default withRouter(Home);

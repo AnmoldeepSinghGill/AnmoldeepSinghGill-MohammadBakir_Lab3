@@ -4,6 +4,11 @@ const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const Schema = mongoose.Schema;
 
+/*
+ * Name: Anmoldeep Singh Gill, Mohammad bakir
+ * Student Number: 301044883, 300987420
+ */
+
 // Define a new 'StudentSchema'
 const StudentSchema = new Schema({
   studentNumber: Number,

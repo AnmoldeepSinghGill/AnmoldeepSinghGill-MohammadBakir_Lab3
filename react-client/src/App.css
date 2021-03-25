@@ -52,10 +52,26 @@
 }
 
 .navbar-image {
-  height: 25%;
-  width: 25%;
+  height: 15%;
+  width: 20%;
 }
 
 .page-header {
   margin-bottom: 20px;
+}
+
+.profileButtons {
+  margin-top: 20px;
+}
+
+.label-bold {
+  font-weight: bold;
+}
+
+.navLinks {
+  color: #ffffff !important;
+}
+
+#profile-section {
+  font-size: 20px;
 }

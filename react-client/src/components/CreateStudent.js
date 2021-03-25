@@ -9,6 +9,11 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { withRouter } from "react-router-dom";
 
+/*
+ * Name: Anmoldeep Singh Gill, Mohammad bakir
+ * Student Number: 301044883, 300987420
+ */
+
 function CreateStudent(props) {
   const [user, setUser] = useState({
     _id: "",
@@ -22,9 +27,11 @@ function CreateStudent(props) {
     phoneNumber: "",
     program: "",
   });
+  const [error, setError] = useState("");
   const [showLoading, setShowLoading] = useState(false);
   const apiUrl = "http://localhost:3000/api/student";
 
+  // calling sign up route to create student
   const saveUser = (e) => {
     setShowLoading(true);
     e.preventDefault();
@@ -46,9 +53,16 @@ function CreateStudent(props) {
         console.log(result);
         props.history.push("/login");
       })
-      .catch((error) => setShowLoading(false));
+      .catch((error) => {
+        setShowLoading(false);
+        console.log("errori login", error);
+        if (error.response.data.error) {
+          setError(error.response.data.error);
+        }
+      });
   };
 
+  // sets the value of the state when change in form values
   const onChange = (e) => {
     e.persist();
     setUser({ ...user, [e.target.name]: e.target.value });
@@ -66,6 +80,11 @@ function CreateStudent(props) {
           <Row className="justify-content-center">
             <h2 className="page-header">Sign Up</h2>
           </Row>
+          {error !== "" && (
+            <div className="alert alert-danger" role="alert">
+              {error}
+            </div>
+          )}
           <Row>
             <Col sm="2"></Col>
             <Col sm="8">
@@ -80,6 +99,7 @@ function CreateStudent(props) {
                       placeholder="Enter first name"
                       value={user.firstName}
                       onChange={onChange}
+                      required
                     />
                   </Form.Group>
                   <Form.Group as={Col}>
@@ -91,6 +111,7 @@ function CreateStudent(props) {
                       placeholder="Enter last name"
                       value={user.lastName}
                       onChange={onChange}
+                      required
                     />
                   </Form.Group>
                 </Form.Row>
@@ -104,6 +125,7 @@ function CreateStudent(props) {
                     placeholder="Enter email"
                     value={user.email}
                     onChange={onChange}
+                    required
                   />
                 </Form.Group>
                 <Form.Group>
@@ -115,6 +137,7 @@ function CreateStudent(props) {
                     placeholder="Enter password"
                     value={user.password}
                     onChange={onChange}
+                    required
                   />
                 </Form.Group>
 
@@ -128,6 +151,7 @@ function CreateStudent(props) {
                     value={user.studentNumber}
                     onChange={onChange}
                     maxLength="9"
+                    required
                   />
                 </Form.Group>
                 <Form.Group>
@@ -139,6 +163,7 @@ function CreateStudent(props) {
                     placeholder="Enter your program"
                     value={user.program}
                     onChange={onChange}
+                    required
                   />
                 </Form.Group>
 
@@ -151,6 +176,7 @@ function CreateStudent(props) {
                     placeholder="Enter Address"
                     value={user.address}
                     onChange={onChange}
+                    required
                   />
                 </Form.Group>
 
@@ -164,6 +190,7 @@ function CreateStudent(props) {
                       placeholder="Enter City"
                       value={user.city}
                       onChange={onChange}
+                      required
                     />
                   </Form.Group>
                   <Form.Group as={Col}>
@@ -175,6 +202,7 @@ function CreateStudent(props) {
                       placeholder="Enter your Phone Number"
                       value={user.phoneNumber}
                       onChange={onChange}
+                      required
                     />
                   </Form.Group>
                 </Form.Row>

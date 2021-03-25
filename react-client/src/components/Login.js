@@ -8,15 +8,20 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import axios from "axios";
 import { withRouter } from "react-router-dom";
+
 //
-import View from "./View";
-//
+/*
+ * Name: Anmoldeep Singh Gill, Mohammad bakir
+ * Student Number: 301044883, 300987420
+ */
+
 function App(props) {
   //state variable for the screen, admin or user
   const [screen, setScreen] = useState("auth");
   //store input field data, user name and password
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
+  const [error, setError] = useState("");
   const apiUrl = "http://localhost:3000/api/signin";
   //send username and password to the server
   // for initial authentication
@@ -29,17 +34,21 @@ function App(props) {
       //call api
       const res = await axios.post(apiUrl, loginData);
       //process the response
-      if (res.data.id !== undefined) {
-        props.history.push("/showStudentDetails/" + res.data.id);
+      if (res.data.id) {
+        props.history.push("/showStudentDetails");
         console.log(res.data.id);
       }
     } catch (e) {
       //print the error
       console.log(e);
+      if (e.response.data.message) {
+        setError(e.response.data.message);
+      }
     }
   };
 
-  //check if the user already logged-in
+  // check if the user already logged-in
+  // if loggen in redirect to student details page
   const readCookie = async () => {
     try {
       console.log("--- in readCookie function ---");
@@ -51,7 +60,7 @@ function App(props) {
         if (res.data.screen !== "auth") {
           if (res.data.id) {
             console.log(res.data.id);
-            props.history.push("/showStudentDetails/" + res.data.id);
+            props.history.push("/showStudentDetails/");
           }
         }
       }
@@ -59,25 +68,35 @@ function App(props) {
       console.log(e);
     }
   };
-  //runs the first time the view is rendered
-  //to check if user is signed in
+
+  // runs on the first render
   useEffect(() => {
     readCookie();
-  }, []); //only the first render
-  //
+  }, []);
+
   return (
     <div className="App">
       <div>
         <Row>
           <Col sm="2"></Col>
           <Col sm="8">
+            <div
+              className="row justify-content-center"
+              style={{ marginTop: "20px", marginBottom: "20px" }}
+            >
+              <h2>Login</h2>
+            </div>
+            {error !== "" && (
+              <div className="alert alert-danger" role="alert">
+                {error}
+              </div>
+            )}
             <Form.Group>
               <Form.Label>Email</Form.Label>
               <Form.Control
                 type="text"
                 name="email"
                 id="email"
-                rows="3"
                 placeholder="Enter email"
                 onChange={(e) => setEmail(e.target.value)}
               />
