@@ -6,6 +6,11 @@ import Button from "react-bootstrap/Button";
 import { withRouter } from "react-router-dom";
 import React, { useState } from "react";
 
+/*
+ * Name: Anmoldeep Singh Gill, Mohammad bakir
+ * Student Number: 301044883, 300987420
+ */
+
 //
 function CreateCourse(props) {
   //
@@ -19,7 +24,8 @@ function CreateCourse(props) {
   const [showLoading, setShowLoading] = useState(false);
   //
   const apiUrl = "http://localhost:3000/api/course";
-  //
+
+  // saves the course
   const saveCourse = (e) => {
     console.log(course);
     setShowLoading(true);
@@ -30,7 +36,7 @@ function CreateCourse(props) {
       section: course.section,
       semester: course.semester,
     };
-    //
+
     axios
       .post(apiUrl, data)
       .then((result) => {
@@ -40,7 +46,8 @@ function CreateCourse(props) {
       })
       .catch((error) => setShowLoading(false));
   };
-  //
+
+  // sets the value of the state when change in form values
   const onChange = (e) => {
     e.persist();
     setCourse({ ...course, [e.target.name]: e.target.value });
@@ -48,7 +55,9 @@ function CreateCourse(props) {
 
   return (
     <div>
-      <h2> Add a New Course</h2>
+      <div className="row justify-content-center" style={{ marginTop: "20px" }}>
+        <h2> Add a New Course</h2>
+      </div>
       {showLoading && (
         <Spinner animation="border" role="status">
           <span className="sr-only">Loading...</span>
@@ -65,6 +74,7 @@ function CreateCourse(props) {
               placeholder="Enter Course Code"
               value={course.courseCode}
               onChange={onChange}
+              required
             />
           </Form.Group>
           <Form.Group>
@@ -76,6 +86,7 @@ function CreateCourse(props) {
               placeholder="Enter Course Name"
               value={course.courseName}
               onChange={onChange}
+              required
             />
           </Form.Group>
 
@@ -88,6 +99,7 @@ function CreateCourse(props) {
               placeholder="Enter Section"
               value={course.section}
               onChange={onChange}
+              required
             />
           </Form.Group>
 
@@ -100,12 +112,15 @@ function CreateCourse(props) {
               placeholder="Enter Semester"
               value={course.semester}
               onChange={onChange}
+              required
             />
           </Form.Group>
 
-          <Button variant="primary" type="submit">
-            Save Course
-          </Button>
+          <div className="row justify-content-center">
+            <Button variant="success" type="submit">
+              Save Course
+            </Button>
+          </div>
         </Form>
       </Jumbotron>
     </div>

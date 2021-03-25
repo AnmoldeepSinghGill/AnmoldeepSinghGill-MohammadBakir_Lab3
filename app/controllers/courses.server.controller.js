@@ -1,5 +1,11 @@
 const Course = require("mongoose").model("Course");
 
+/*
+ * Name: Anmoldeep Singh Gill, Mohammad bakir
+ * Student Number: 301044883, 300987420
+ */
+
+// for saving a new course in db
 exports.addCourse = (req, res, next) => {
   const course = new Course(req.body);
   console.log(req.body);
@@ -12,6 +18,7 @@ exports.addCourse = (req, res, next) => {
   });
 };
 
+// for updating an existing course
 exports.updateCourse = (req, res, next) => {
   const course = new Course(req.body);
   console.log(req.body);
@@ -34,6 +41,7 @@ exports.updateCourse = (req, res, next) => {
   );
 };
 
+// for listing all the courses
 exports.listAllCourses = (req, res) => {
   Course.find({}, (err, courses) => {
     if (err) {
@@ -63,28 +71,13 @@ exports.courseById = function (req, res, next, id) {
   });
 };
 
+// deletes the course
 exports.deleteCourse = (req, res, next) => {
   Course.findByIdAndDelete(req.params.courseId, function (err) {
     if (err) {
       return next(err);
     } else {
       res.status(200).send({ messgae: "Succesfully Deleted" });
-    }
-  });
-};
-
-// 'courseById' controller method to find a course by its id
-exports.getCourseById = function (req, res, next) {
-  // Use the 'Course' static 'findById' method to retrieve a specific student
-  Course.findById(req.params.courseId, (err, course) => {
-    if (err) {
-      // Call the next middleware with an error message
-      return next(err);
-    } else {
-      // Set the 'req.course' property
-      res.status(200).send(course);
-      // Call the next middleware
-      next();
     }
   });
 };

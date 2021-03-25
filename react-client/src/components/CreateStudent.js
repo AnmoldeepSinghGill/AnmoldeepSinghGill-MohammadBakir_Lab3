@@ -9,6 +9,11 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { withRouter } from "react-router-dom";
 
+/*
+ * Name: Anmoldeep Singh Gill, Mohammad bakir
+ * Student Number: 301044883, 300987420
+ */
+
 function CreateStudent(props) {
   const [user, setUser] = useState({
     _id: "",
@@ -26,6 +31,7 @@ function CreateStudent(props) {
   const [showLoading, setShowLoading] = useState(false);
   const apiUrl = "http://localhost:3000/api/student";
 
+  // calling sign up route to create student
   const saveUser = (e) => {
     setShowLoading(true);
     e.preventDefault();
@@ -56,6 +62,7 @@ function CreateStudent(props) {
       });
   };
 
+  // sets the value of the state when change in form values
   const onChange = (e) => {
     e.persist();
     setUser({ ...user, [e.target.name]: e.target.value });

@@ -8,9 +8,13 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import axios from "axios";
 import { withRouter } from "react-router-dom";
+
 //
-import View from "./View";
-//
+/*
+ * Name: Anmoldeep Singh Gill, Mohammad bakir
+ * Student Number: 301044883, 300987420
+ */
+
 function App(props) {
   //state variable for the screen, admin or user
   const [screen, setScreen] = useState("auth");
@@ -44,6 +48,7 @@ function App(props) {
   };
 
   // check if the user already logged-in
+  // if loggen in redirect to student details page
   const readCookie = async () => {
     try {
       console.log("--- in readCookie function ---");

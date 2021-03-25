@@ -6,6 +6,11 @@ import { withRouter } from "react-router-dom";
 import Login from "./Login";
 import Button from "react-bootstrap/Button";
 
+/*
+ * Name: Anmoldeep Singh Gill, Mohammad bakir
+ * Student Number: 301044883, 300987420
+ */
+
 function ListCourses(props) {
   const [courses, setCourses] = useState([]);
   const [state, setState] = useState("");
@@ -19,6 +24,7 @@ function ListCourses(props) {
     fetchData();
   }, []);
 
+  // fetches the list of all the courses
   const fetchData = async () => {
     axios
       .get(apiUrl)
@@ -40,6 +46,7 @@ function ListCourses(props) {
       });
   };
 
+  // adds the course in the student profile if already not present
   const enrollInCourse = (courseId) => {
     if (studentId) {
       axios
@@ -59,6 +66,7 @@ function ListCourses(props) {
     }
   };
 
+  // deletes a course by provided id
   const deleteCourse = (id) => {
     axios
       .delete(apiUrl + id)
@@ -71,18 +79,21 @@ function ListCourses(props) {
       });
   };
 
+  // navigate to edit course view
   const editCourse = (id) => {
     props.history.push({
       pathname: "/editCourse/" + id,
     });
   };
 
+  // navigate to add new course view
   const addNewCourse = () => {
     props.history.push("/addCourse");
   };
 
+  // navigate to list all students in a course view
   const listStudentsEnrolled = (id) => {
-    props.history.push("listStudentByCourse/" + id);
+    props.history.push("/listStudentInCourse/" + id);
   };
 
   return (
@@ -99,72 +110,20 @@ function ListCourses(props) {
               {error}
             </div>
           )}
-          <div className="row justify-content-center">
+          <div
+            className="row justify-content-center"
+            style={{ marginTop: "20px" }}
+          >
             <h1>All Courses</h1>
           </div>
-          <div className="row justify-content-end profileButtons">
+          <div
+            className="row justify-content-end profileButtons"
+            style={{ padding: "0 15px 20px 0" }}
+          >
             <Button variant="success" onClick={addNewCourse}>
               Add New Course
             </Button>
           </div>
-          {/* <table className="table">
-            <thead>
-              <tr>
-                <th>Course Code</th>
-                <th>Course Name</th>
-                <th>Section</th>
-                <th>Semester</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {courses.map((item, idx) => (
-                <tr key={idx}>
-                  <td>{item.courseCode}</td>
-                  <td>{item.courseName}</td>
-                  <td>{item.section}</td>
-                  <td>{item.semester}</td>
-                  <td>
-                    <Button
-                      variant="success"
-                      onClick={() => {
-                        enrollInCourse(item._id);
-                      }}
-                    >
-                      Enroll Into Course
-                    </Button>
-                    &nbsp;
-                    <Button
-                      variant="danger"
-                      onClick={() => {
-                        deleteCourse(item._id);
-                      }}
-                    >
-                      Delete Course
-                    </Button>
-                    &nbsp;
-                    <Button
-                      variant="warning"
-                      onClick={() => {
-                        editCourse(item._id);
-                      }}
-                    >
-                      Edit Course
-                    </Button>
-                    &nbsp;
-                    <Button
-                      variant="success"
-                      onClick={() => {
-                        listStudentsEnrolled(item._id);
-                      }}
-                    >
-                      List Students Enrolled
-                    </Button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table> */}
           {courses.map((course, idx) => (
             <div className="row justify-content-center" key={idx}>
               <div className="col-sm-12">
@@ -225,10 +184,10 @@ function ListCourses(props) {
                           <button
                             className="btn btn-danger"
                             onClick={() => {
-                              dropCourse(course._id);
+                              deleteCourse(course._id);
                             }}
                           >
-                            Drop Course
+                            Delete Course
                           </button>
                         </div>
                       </div>

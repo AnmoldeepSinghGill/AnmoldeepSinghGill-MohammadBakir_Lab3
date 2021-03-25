@@ -6,6 +6,11 @@ import { withRouter } from "react-router-dom";
 import Login from "./Login";
 import Button from "react-bootstrap/Button";
 
+/*
+ * Name: Anmoldeep Singh Gill, Mohammad bakir
+ * Student Number: 301044883, 300987420
+ */
+
 function ListStudentsInCourse(props) {
   const [students, setStudents] = useState([]);
   const [course, setCourse] = useState({
@@ -19,7 +24,7 @@ function ListStudentsInCourse(props) {
   const [showLoading, setShowLoading] = useState(true);
   const [error, setError] = useState("");
   const apiUrl =
-    "http://localhost:3000/api/coursesByStudent/" + props.match.params.id;
+    "http://localhost:3000/api/studentsByCourse/" + props.match.params.id;
   const courseApiUrl =
     "http://localhost:3000/api/getCourse/" + props.match.params.id;
 
@@ -28,6 +33,7 @@ function ListStudentsInCourse(props) {
     fetchCourseData();
   }, []);
 
+  // fetch the course data by id paramenters
   const fetchCourseData = async () => {
     axios
       .get(courseApiUrl)
@@ -48,6 +54,7 @@ function ListStudentsInCourse(props) {
       });
   };
 
+  // fetch the students enrolled in the course by course id
   const fetchData = async () => {
     axios
       .get(apiUrl)

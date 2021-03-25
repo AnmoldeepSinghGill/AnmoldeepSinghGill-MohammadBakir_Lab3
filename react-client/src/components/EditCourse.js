@@ -6,6 +6,11 @@ import Button from "react-bootstrap/Button";
 import { withRouter } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 
+/*
+ * Name: Anmoldeep Singh Gill, Mohammad bakir
+ * Student Number: 301044883, 300987420
+ */
+
 function EditCourse(props) {
   useEffect(() => {
     const fetchData = async () => {
@@ -35,6 +40,8 @@ function EditCourse(props) {
   //
   const apiUrl = "http://localhost:3000/api/course/";
   //
+
+  // save the edited data of course
   const saveCourse = (e) => {
     console.log(course);
     setShowLoading(true);
@@ -45,7 +52,6 @@ function EditCourse(props) {
       section: course.section,
       semester: course.semester,
     };
-    //
     axios
       .put(apiUrl + course._id, data)
       .then((result) => {
@@ -55,7 +61,8 @@ function EditCourse(props) {
       })
       .catch((error) => setShowLoading(false));
   };
-  //
+
+  // sets the value of the state when change in form values
   const onChange = (e) => {
     e.persist();
     setCourse({ ...course, [e.target.name]: e.target.value });
@@ -63,7 +70,9 @@ function EditCourse(props) {
 
   return (
     <div>
-      <h2> Edit Course</h2>
+      <div className="row justify-content-center" style={{ marginTop: "20px" }}>
+        <h2> Edit Course</h2>
+      </div>
       {showLoading && (
         <Spinner animation="border" role="status">
           <span className="sr-only">Loading...</span>
@@ -124,7 +133,7 @@ function EditCourse(props) {
 
           <div className="row justify-content-center">
             <Button variant="success" type="submit">
-              Save Course
+              Update Course
             </Button>
           </div>
         </Form>

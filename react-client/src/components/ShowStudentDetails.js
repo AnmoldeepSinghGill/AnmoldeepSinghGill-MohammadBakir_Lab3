@@ -7,7 +7,13 @@ import { withRouter } from "react-router-dom";
 import ListGroup from "react-bootstrap/ListGroup";
 import Login from "./Login";
 
+/*
+ * Name: Anmoldeep Singh Gill, Mohammad bakir
+ * Student Number: 301044883, 300987420
+ */
+
 function ShowUser(props) {
+  // defining state variables using react hooks
   const [screen, setScreen] = useState("");
   const [data, setData] = useState({});
   const [courses, setCourses] = useState([]);
@@ -21,6 +27,7 @@ function ShowUser(props) {
     readCookieAndGetStudentDetails();
   }, []);
 
+  // if user signed in get user by id
   const fetchData = async (id) => {
     const result = await axios(apiUrl + id);
     setData(result.data);
@@ -28,7 +35,8 @@ function ShowUser(props) {
     setShowLoading(false);
   };
 
-  // checking if the user is signed in
+  // reding from cookies on the server and getting user details
+  // unless set the view to Logout component
   const readCookieAndGetStudentDetails = async () => {
     try {
       const res = await axios.get("/api/read_cookie");
@@ -47,19 +55,16 @@ function ShowUser(props) {
     }
   };
 
-  const editUser = (id) => {
-    props.history.push({
-      pathname: "/edit/" + id,
-    });
-  };
-
+  // calling the logout route to clear jwt token from
+  // the cookies and logout user
   const logOut = async () => {
-    const res = await axios.get("/api/signout");
+    const res = await axios.get("http://localhost:3000/api/signout");
     if (res.data.message === "signed out") {
       props.history.push("/login");
     }
   };
 
+  // drop a course from user profile
   const dropCourse = async (courseId) => {
     setShowLoading(true);
     axios
@@ -74,12 +79,14 @@ function ShowUser(props) {
       });
   };
 
+  // go to edit course view by course id
   const editCourse = (id) => {
     props.history.push({
       pathname: "/editCourse/" + id,
     });
   };
 
+  // go to show all courses view
   const showCourses = () => {
     props.history.push("/listCourses");
   };
@@ -94,33 +101,55 @@ function ShowUser(props) {
             </Spinner>
           )}
           <Jumbotron>
-            <div className="row justify-content-center">
-              <h1>Your Info</h1>
-            </div>
-            <div className="row">
-              <h5 className="label-bold">Name: </h5>
-              {data.firstName}, {data.lastName}
-            </div>
-            <div className="row">
-              <h5>Email: {data.email}</h5>
-            </div>
-            <div className="row">
-              <h5>Student Number: {data.studentNumber}</h5>
-            </div>
-            <div className="row">
-              <h5>Program: {data.program}</h5>
-            </div>
-            <div className="row">
-              <h5>Address: {data.address}</h5>
-            </div>
-            <div className="row">
-              <h5>City: {data.city}</h5>
-            </div>
-            <div className="row">
-              <h5>Phone Number: {data.phoneNumber}</h5>
+            <div id="profile-section">
+              <div className="row justify-content-center">
+                <h1>Your Info</h1>
+              </div>
+              <div className="row justify-content-end">
+                <Button variant="danger" onClick={logOut}>
+                  Logout
+                </Button>
+              </div>
+              <div className="row justify-content-center">
+                <div className="label-bold col-6 text-right">Name: </div>
+                <div className="col-6">
+                  {data.firstName}, {data.lastName}{" "}
+                </div>
+              </div>
+              <div className="row justify-content-center">
+                <div className="label-bold col-6 text-right">Email: </div>
+                <div className="col-6"> {data.email}</div>
+              </div>
+              <div className="row justify-content-center">
+                <div className="label-bold col-6 text-right">
+                  Student Number:{" "}
+                </div>
+                <div className="col-6">{data.studentNumber}</div>
+              </div>
+              <div className="row justify-content-center">
+                <div className="label-bold col-6 text-right">Program: </div>
+                <div className="col-6"> {data.program}</div>
+              </div>
+              <div className="row justify-content-center">
+                <div className="label-bold col-6 text-right">Address: </div>
+                <div className="col-6"> {data.address}</div>
+              </div>
+              <div className="row justify-content-center">
+                <div className="label-bold col-6 text-right">City: </div>
+                <div className="col-6">{data.city}</div>
+              </div>
+              <div className="row justify-content-center">
+                <div className="label-bold col-6 text-right">
+                  Phone Number:{" "}
+                </div>
+                <div className="col-6"> {data.phoneNumber}</div>
+              </div>
             </div>
 
-            <div className="row justify-content-center">
+            <div
+              className="row justify-content-center"
+              style={{ marginTop: "20px" }}
+            >
               <h1>Your Courses</h1>
             </div>
             {courses.map((course, idx) => (
@@ -163,23 +192,6 @@ function ShowUser(props) {
                           </div>
                         </div>
                       </div>
-                      {/* <button
-                        className="btn btn-danger"
-                        onClick={() => {
-                          dropCourse(course._id);
-                        }}
-                      >
-                        Drop Course
-                      </button>
-                      &nbsp;
-                      <Button
-                        variant="warning"
-                        onClick={() => {
-                          editCourse(course._id);
-                        }}
-                      >
-                        Edit Course
-                      </Button> */}
                     </div>
                   </div>
                 </div>
