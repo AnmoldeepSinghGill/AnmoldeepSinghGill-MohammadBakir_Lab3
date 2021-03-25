@@ -12,7 +12,6 @@ function ShowUser(props) {
   const [data, setData] = useState({});
   const [courses, setCourses] = useState([]);
   const [showLoading, setShowLoading] = useState(true);
-  const [screen, setScreen] = useState("");
   const apiUrl = "http://localhost:3000/api/students/";
   const dropCourseApi = "/api/dropCourse/";
 
@@ -73,6 +72,12 @@ function ShowUser(props) {
         console.log("error in drop course:", error);
         setShowLoading(false);
       });
+  };
+
+  const editCourse = (id) => {
+    props.history.push({
+      pathname: "/editCourse/" + id,
+    });
   };
 
   const showCourses = () => {
@@ -137,6 +142,15 @@ function ShowUser(props) {
                       >
                         Drop Course
                       </button>
+                      &nbsp;
+                      <Button
+                        variant="warning"
+                        onClick={() => {
+                          editCourse(course._id);
+                        }}
+                      >
+                        Edit Course
+                      </Button>
                     </div>
                   </div>
                 </div>

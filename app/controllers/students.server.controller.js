@@ -48,6 +48,7 @@ exports.authenticate = function (req, res, next) {
       console.log(studentFound);
       if (studentFound) {
         //compare passwords
+        console.log(bcrypt.compareSync(password, studentFound.password));
         if (bcrypt.compareSync(password, studentFound.password)) {
           // Create a new token with the Student  id in the payload
           // and which expires 300 seconds after issue
@@ -74,14 +75,14 @@ exports.authenticate = function (req, res, next) {
           //call the next middleware
           next();
         } else {
-          res.json({
+          res.status(401).send({
             status: "error",
             message: "Invalid Email or Password",
             data: null,
           });
         }
       } else {
-        res.json({
+        res.status(401).send({
           status: "error",
           message: "Invalid Email or Password",
           data: null,

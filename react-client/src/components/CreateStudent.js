@@ -92,6 +92,7 @@ function CreateStudent(props) {
                       placeholder="Enter first name"
                       value={user.firstName}
                       onChange={onChange}
+                      required
                     />
                   </Form.Group>
                   <Form.Group as={Col}>
@@ -103,6 +104,7 @@ function CreateStudent(props) {
                       placeholder="Enter last name"
                       value={user.lastName}
                       onChange={onChange}
+                      required
                     />
                   </Form.Group>
                 </Form.Row>
@@ -116,6 +118,7 @@ function CreateStudent(props) {
                     placeholder="Enter email"
                     value={user.email}
                     onChange={onChange}
+                    required
                   />
                 </Form.Group>
                 <Form.Group>
@@ -127,6 +130,7 @@ function CreateStudent(props) {
                     placeholder="Enter password"
                     value={user.password}
                     onChange={onChange}
+                    required
                   />
                 </Form.Group>
 
@@ -140,6 +144,7 @@ function CreateStudent(props) {
                     value={user.studentNumber}
                     onChange={onChange}
                     maxLength="9"
+                    required
                   />
                 </Form.Group>
                 <Form.Group>
@@ -151,6 +156,7 @@ function CreateStudent(props) {
                     placeholder="Enter your program"
                     value={user.program}
                     onChange={onChange}
+                    required
                   />
                 </Form.Group>
 
@@ -163,6 +169,7 @@ function CreateStudent(props) {
                     placeholder="Enter Address"
                     value={user.address}
                     onChange={onChange}
+                    required
                   />
                 </Form.Group>
 
@@ -176,6 +183,7 @@ function CreateStudent(props) {
                       placeholder="Enter City"
                       value={user.city}
                       onChange={onChange}
+                      required
                     />
                   </Form.Group>
                   <Form.Group as={Col}>
@@ -187,6 +195,7 @@ function CreateStudent(props) {
                       placeholder="Enter your Phone Number"
                       value={user.phoneNumber}
                       onChange={onChange}
+                      required
                     />
                   </Form.Group>
                 </Form.Row>

@@ -8,15 +8,45 @@ import Button from "react-bootstrap/Button";
 
 function ListStudentsInCourse(props) {
   const [students, setStudents] = useState([]);
+  const [course, setCourse] = useState({
+    _id: "",
+    courseCode: "",
+    courseName: "",
+    section: "",
+    semester: "",
+  });
   const [state, setState] = useState("");
   const [showLoading, setShowLoading] = useState(true);
   const [error, setError] = useState("");
   const apiUrl =
     "http://localhost:3000/api/coursesByStudent/" + props.match.params.id;
+  const courseApiUrl =
+    "http://localhost:3000/api/getCourse/" + props.match.params.id;
 
   useEffect(() => {
     fetchData();
+    fetchCourseData();
   }, []);
+
+  const fetchCourseData = async () => {
+    axios
+      .get(courseApiUrl)
+      .then((result) => {
+        console.log("result.data:", result.data);
+        //check if the user has logged in
+        if (result.data.screen !== "auth") {
+          console.log("data in if:", result.data);
+          setCourse(result.data);
+          setShowLoading(false);
+        } else {
+          setState("signedOut");
+        }
+      })
+      .catch((error) => {
+        setShowLoading(false);
+        console.log("error in fetchData:", error);
+      });
+  };
 
   const fetchData = async () => {
     axios
@@ -33,6 +63,7 @@ function ListStudentsInCourse(props) {
         }
       })
       .catch((error) => {
+        setShowLoading(false);
         console.log("error in fetchData:", error);
       });
   };
@@ -51,8 +82,13 @@ function ListStudentsInCourse(props) {
               {error}
             </div>
           )}
-          <div className="row justify-content-center">
-            <h2>All Students Enrolled in The course</h2>
+          <div
+            className="row justify-content-center"
+            style={{ marginTop: "35px", marginBottom: "35px" }}
+          >
+            <h2>
+              All Students Enrolled in {course.courseName} ({course.courseCode})
+            </h2>
           </div>
           <table className="table">
             <thead>

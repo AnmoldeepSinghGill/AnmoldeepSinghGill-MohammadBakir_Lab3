@@ -14,11 +14,9 @@ import Button from "react-bootstrap/Button";
 import "./App.css";
 //
 import ListStudents from "./components/ListStudents";
-import EditArticle from "./components/EditArticle";
 
 import CreateStudent from "./components/CreateStudent";
 import ShowStudentDetail from "./components/ShowStudentDetails";
-import ShowArticle from "./components/ShowArticle";
 
 import ListCourses from "./components/ListCourses";
 import CreateCourse from "./components/CreateCourse";
@@ -27,7 +25,6 @@ import Home from "./components/Home";
 import Login from "./components/Login";
 import Logout from "./components/Logout";
 import ListStudentsInCourse from "./components/ListStudentsInCourse";
-import EditCourse from "./components/EditCourse";
 import EditCourse from "./components/EditCourse";
 
 function App() {
@@ -63,8 +60,6 @@ function App() {
             render={() => <ShowStudentDetail />}
             path="/showStudentDetails"
           />
-          <Route render={() => <ShowArticle />} path="/showarticle/:id" />
-          <Route render={() => <EditArticle />} path="/editarticle/:id" />
           <Route render={() => <ListCourses />} path="/listCourses" />
           <Route render={() => <CreateCourse />} path="/addCourse" />
           <Route render={() => <EditCourse />} path="/editCourse/:id" />

@@ -4,22 +4,20 @@ import Jumbotron from "react-bootstrap/Jumbotron";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { withRouter } from "react-router-dom";
-import React, {useEffect, useState} from "react";
-
+import React, { useEffect, useState } from "react";
 
 function EditCourse(props) {
-
   useEffect(() => {
     const fetchData = async () => {
       axios
-          .get('http://localhost:3000/api/getCourse/' + props.match.params.id)
-          .then((result) => {
-            console.log("result.data:", result.data);
-            setCourse(result.data)
-          })
-          .catch((error) => {
-            console.log("error in fetchData:", error);
-          });
+        .get("http://localhost:3000/api/getCourse/" + props.match.params.id)
+        .then((result) => {
+          console.log("result.data:", result.data);
+          setCourse(result.data);
+        })
+        .catch((error) => {
+          console.log("error in fetchData:", error);
+        });
     };
     fetchData();
   }, []);
@@ -82,6 +80,7 @@ function EditCourse(props) {
               placeholder="Enter Course Code"
               value={course.courseCode}
               onChange={onChange}
+              required
             />
           </Form.Group>
           <Form.Group>
@@ -93,6 +92,7 @@ function EditCourse(props) {
               placeholder="Enter Course Name"
               value={course.courseName}
               onChange={onChange}
+              required
             />
           </Form.Group>
 
@@ -105,6 +105,7 @@ function EditCourse(props) {
               placeholder="Enter Section"
               value={course.section}
               onChange={onChange}
+              required
             />
           </Form.Group>
 
@@ -117,12 +118,15 @@ function EditCourse(props) {
               placeholder="Enter Semester"
               value={course.semester}
               onChange={onChange}
+              required
             />
           </Form.Group>
 
-          <Button variant="primary" type="submit">
-            Save Course
-          </Button>
+          <div className="row justify-content-center">
+            <Button variant="success" type="submit">
+              Save Course
+            </Button>
+          </div>
         </Form>
       </Jumbotron>
     </div>

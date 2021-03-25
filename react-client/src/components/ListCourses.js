@@ -77,13 +77,6 @@ function ListCourses(props) {
     });
   };
 
-
-  const editCourse = (id) => {
-    props.history.push({
-      pathname: "/editCourse/" + id,
-    });
-  };
-
   const addNewCourse = () => {
     props.history.push("/addCourse");
   };
@@ -148,6 +141,15 @@ function ListCourses(props) {
                       }}
                     >
                       Delete Course
+                    </Button>
+                    &nbsp;
+                    <Button
+                      variant="warning"
+                      onClick={() => {
+                        editCourse(item._id);
+                      }}
+                    >
+                      Edit Course
                     </Button>
                     &nbsp;
                     <Button
