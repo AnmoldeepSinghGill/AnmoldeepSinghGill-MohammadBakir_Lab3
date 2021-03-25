@@ -83,3 +83,20 @@ exports.getCourseById = function (req, res, next) {
     });
 };
 
+
+// 'courseById' controller method to find a course by its id
+exports.getCourseById = function (req, res, next) {
+    // Use the 'Course' static 'findById' method to retrieve a specific student
+    Course.findById(req.params.courseId, (err, course) => {
+        if (err) {
+            // Call the next middleware with an error message
+            return next(err);
+        } else {
+            // Set the 'req.course' property
+            res.status(200).send(course);
+            // Call the next middleware
+            next();
+        }
+    });
+};
+

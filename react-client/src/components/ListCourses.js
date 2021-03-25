@@ -77,6 +77,13 @@ function ListCourses(props) {
     });
   };
 
+
+  const editCourse = (id) => {
+    props.history.push({
+      pathname: "/editCourse/" + id,
+    });
+  };
+
   const addNewCourse = () => {
     props.history.push("/addCourse");
   };

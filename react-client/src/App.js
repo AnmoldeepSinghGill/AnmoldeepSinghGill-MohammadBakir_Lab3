@@ -28,6 +28,7 @@ import Login from "./components/Login";
 import Logout from "./components/Logout";
 import ListStudentsInCourse from "./components/ListStudentsInCourse";
 import EditCourse from "./components/EditCourse";
+import EditCourse from "./components/EditCourse";
 
 function App() {
   return (
