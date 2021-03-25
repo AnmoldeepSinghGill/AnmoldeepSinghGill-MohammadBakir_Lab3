@@ -255,13 +255,18 @@ exports.dropCourseByStudentId = (req, res, next) => {
 
   if (student && courseId) {
     student.courses = student.courses.filter((c) => c._id != courseId);
-    student.save((err, studentResult) => {
-      if (err) {
-        return next(err);
-      } else {
-        res.status(200).send(studentResult);
+    // updating courses of student to drop a course for student
+    Student.findByIdAndUpdate(
+      student._id,
+      { courses: student.courses },
+      (err, studentResult) => {
+        if (err) {
+          return res.status(500).send({ error: err }).end();
+        } else {
+          res.status(200).send(studentResult);
+        }
       }
-    });
+    );
   }
 };
 
