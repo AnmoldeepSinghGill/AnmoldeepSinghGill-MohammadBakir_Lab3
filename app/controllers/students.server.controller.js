@@ -4,7 +4,7 @@ const Course = require("mongoose").model("Course");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const config = require("../../config/config");
-const jwtExpirySeconds = 300;
+const jwtExpirySeconds = 3000;
 const jwtKey = config.secretKey;
 
 // Create a new error handling controller method
@@ -39,6 +39,7 @@ exports.authenticate = function (req, res, next) {
   // Get credentials from request body
   const { email, password } = req.body.auth;
   console.log(email);
+  console.log(password);
   //find the Student  with given email using static method findOne
   Student.findOne({ email: email }, (err, studentFound) => {
     if (err) {
@@ -222,19 +223,22 @@ exports.enrollStudentInCourse = (req, res, next) => {
   const course = req.course;
 
   if (student && course) {
-    if (student.courses.includes(req.params.courseId)) {
+    if (student.courses.some((c) => c._id == req.params.courseId)) {
       console.log("already enrolled");
-      return next("Patient already enrolled into the course.");
+      // return next("Student already enrolled into the course.");
+      res
+        .status(500)
+        .send({ message: "Student already enrolled into the course." });
+    } else {
+      student.courses.push(course);
+      student.save((err, studentResult) => {
+        if (err) {
+          return next(err);
+        } else {
+          res.status(200).send(studentResult);
+        }
+      });
     }
-    //TODO add the validation for course already exists
-    student.courses.push(course);
-    student.save((err, studentResult) => {
-      if (err) {
-        return next(err);
-      } else {
-        res.status(200).send(studentResult);
-      }
-    });
   }
 };
 
@@ -271,8 +275,7 @@ exports.dropCourseByStudentId = (req, res, next) => {
   const courseId = req.params.courseId;
 
   if (student && courseId) {
-    student.courses = student.courses.filter((c) => c != courseId);
-    console.log(student.courses);
+    student.courses = student.courses.filter((c) => c._id != courseId);
     student.save((err, studentResult) => {
       if (err) {
         return next(err);
@@ -295,4 +298,37 @@ exports.getAllCoursesByStudent = (req, res, next) => {
         // Call the next middleware
       }
     });
+};
+
+//check if the student is signed in
+exports.loginGuard = (req, res, next) => {
+  // Obtain the session token from the requests cookies,
+  // which come with every request
+  const token = req.cookies.token;
+  console.log(token);
+  // if the cookie is not set, return 'auth'
+  if (!token) {
+    return res.send({ screen: "auth" }).end();
+  }
+  var payload;
+  try {
+    // Parse the JWT string and store the result in `payload`.
+    // Note that we are passing the key in this method as well. This method will throw an error
+    // if the token is invalid (if it has expired according to the expiry time we set on sign in),
+    // or if the signature does not match
+    payload = jwt.verify(token, jwtKey);
+    req.id = payload.id;
+    console.log("payload", payload);
+  } catch (e) {
+    if (e instanceof jwt.JsonWebTokenError) {
+      // the JWT is unauthorized, return a 401 error
+      return res.status(401).end();
+    }
+    // otherwise, return a bad request error
+    return res.status(400).end();
+  }
+
+  console.log("payload", payload);
+  // next
+  next();
 };

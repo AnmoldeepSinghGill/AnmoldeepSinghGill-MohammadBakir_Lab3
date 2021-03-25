@@ -51,7 +51,7 @@ function App(props) {
         if (res.data.screen !== "auth") {
           if (res.data.id) {
             console.log(res.data.id);
-            props.history.push("/showStudentDetails/" + res.data.id);
+            props.history.push("/showStudentDetails/");
           }
         }
       }

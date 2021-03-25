@@ -22,6 +22,7 @@ function CreateStudent(props) {
     phoneNumber: "",
     program: "",
   });
+  const [error, setError] = useState("");
   const [showLoading, setShowLoading] = useState(false);
   const apiUrl = "http://localhost:3000/api/student";
 
@@ -46,7 +47,13 @@ function CreateStudent(props) {
         console.log(result);
         props.history.push("/login");
       })
-      .catch((error) => setShowLoading(false));
+      .catch((error) => {
+        setShowLoading(false);
+        console.log("errori login", error);
+        if (error.response.data.error) {
+          setError(error.response.data.error);
+        }
+      });
   };
 
   const onChange = (e) => {
@@ -66,6 +73,11 @@ function CreateStudent(props) {
           <Row className="justify-content-center">
             <h2 className="page-header">Sign Up</h2>
           </Row>
+          {error !== "" && (
+            <div className="alert alert-danger" role="alert">
+              {error}
+            </div>
+          )}
           <Row>
             <Col sm="2"></Col>
             <Col sm="8">

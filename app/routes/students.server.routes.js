@@ -8,16 +8,16 @@ module.exports = function (app) {
   // app.get('/welcome',users.welcome);
 
   app.post("/api/student", students.signUp);
-  app.get("/api/students", students.listAllStudents);
+  app.get("/api/students", students.loginGuard, students.listAllStudents);
   app.get("/api/students/:studentId", students.sendStudentFoundById);
-  app.get("/api/course/:courseId", students.listAllStudentsByCourse);
+  app.get("/api/coursesByStudent/:courseId", students.listAllStudentsByCourse);
 
   app.post("/api/signin", students.authenticate);
   app.get("/api/signout", students.signout);
   app.get("/api/read_cookie", students.isSignedIn);
 
   app.put(
-    "/api/addCourse/:studentId/:courseId",
+    "/api/enrollCourse/:studentId/:courseId",
     students.enrollStudentInCourse
   );
   app.put(
@@ -29,5 +29,5 @@ module.exports = function (app) {
 
   app.param("studentId", students.studentById);
   app.param("courseId", courses.courseById);
-  app.get('/read_cookie', students.isSignedIn);
+  app.get("/read_cookie", students.isSignedIn);
 };

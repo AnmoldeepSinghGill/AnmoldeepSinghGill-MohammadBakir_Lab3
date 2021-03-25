@@ -14,7 +14,6 @@ import Button from "react-bootstrap/Button";
 import "./App.css";
 //
 import ListStudents from "./components/ListStudents";
-import EditStudent from "./components/EditStudent";
 import EditArticle from "./components/EditArticle";
 
 import CreateStudent from "./components/CreateStudent";
@@ -27,6 +26,8 @@ import CreateCourse from "./components/CreateCourse";
 import Home from "./components/Home";
 import Login from "./components/Login";
 import Logout from "./components/Logout";
+import ListStudentsInCourse from "./components/ListStudentsInCourse";
+import EditCourse from "./components/EditCourse";
 
 function App() {
   return (
@@ -45,6 +46,7 @@ function App() {
               <Nav.Link href="/home">Home</Nav.Link>
               <Nav.Link href="/login">Login</Nav.Link>
               <Nav.Link href="/listStudents">List All Students</Nav.Link>
+              <Nav.Link href="/listCourses">List All Courses</Nav.Link>
               <Nav.Link href="/signUp">Sign Up</Nav.Link>
               {/* <Logout /> */}
             </Nav>
@@ -55,7 +57,6 @@ function App() {
           <Route render={() => <Home />} path="/home" />
           <Route render={() => <Login />} path="/login" />
           <Route render={() => <ListStudents />} path="/listStudents" />
-          <Route render={() => <EditStudent />} path="/editStudent/:id" />
           <Route render={() => <CreateStudent />} path="/signUp" />
           <Route
             render={() => <ShowStudentDetail />}
@@ -65,6 +66,11 @@ function App() {
           <Route render={() => <EditArticle />} path="/editarticle/:id" />
           <Route render={() => <ListCourses />} path="/listCourses" />
           <Route render={() => <CreateCourse />} path="/addCourse" />
+          <Route render={() => <EditCourse />} path="/editCourse/:id" />
+          <Route
+            render={() => <ListStudentsInCourse />}
+            path="/listStudentByCourse/:id"
+          />
         </div>
       </div>
     </Router>

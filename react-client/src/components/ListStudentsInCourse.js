@@ -6,12 +6,13 @@ import { withRouter } from "react-router-dom";
 import Login from "./Login";
 import Button from "react-bootstrap/Button";
 
-function ListStudents(props) {
+function ListStudentsInCourse(props) {
   const [students, setStudents] = useState([]);
   const [state, setState] = useState("");
   const [showLoading, setShowLoading] = useState(true);
   const [error, setError] = useState("");
-  const apiUrl = "http://localhost:3000/api/students/";
+  const apiUrl =
+    "http://localhost:3000/api/coursesByStudent/" + props.match.params.id;
 
   useEffect(() => {
     fetchData();
@@ -51,7 +52,7 @@ function ListStudents(props) {
             </div>
           )}
           <div className="row justify-content-center">
-            <h2>All Students</h2>
+            <h2>All Students Enrolled in The course</h2>
           </div>
           <table className="table">
             <thead>
@@ -89,4 +90,4 @@ function ListStudents(props) {
   );
 }
 //
-export default withRouter(ListStudents);
+export default withRouter(ListStudentsInCourse);
