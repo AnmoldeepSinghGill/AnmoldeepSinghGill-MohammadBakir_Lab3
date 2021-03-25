@@ -98,9 +98,8 @@ function ShowUser(props) {
               <h1>Your Info</h1>
             </div>
             <div className="row">
-              <h2>
-                Name: {data.firstName}, {data.lastName}
-              </h2>
+              <h5 className="label-bold">Name: </h5>
+              {data.firstName}, {data.lastName}
             </div>
             <div className="row">
               <h5>Email: {data.email}</h5>
@@ -126,15 +125,45 @@ function ShowUser(props) {
             </div>
             {courses.map((course, idx) => (
               <div className="row justify-content-center" key={idx}>
-                <div className="col-sm-6">
+                <div className="col-sm-7">
                   <div className="card">
                     <div className="card-body">
                       <h5 className="card-title">{course.courseName}</h5>
-                      <p className="card-text">
-                        {course.courseCode}-{course.section}
-                      </p>
-                      <p className="card-text">Semester-{course.semester}</p>
-                      <button
+                      <div className="row">
+                        <div className="col-6">
+                          <b>Code: </b> {course.courseCode}
+                          <br />
+                          <b>Section: </b> {course.section}
+                          <br />
+                          <b>Semester: </b> {course.semester}
+                        </div>
+                        <div className="col-6">
+                          <div className="row justify-content-center">
+                            <Button
+                              variant="warning"
+                              onClick={() => {
+                                editCourse(course._id);
+                              }}
+                            >
+                              Edit Course
+                            </Button>
+                          </div>
+                          <div
+                            className="row justify-content-center"
+                            style={{ marginTop: "15px" }}
+                          >
+                            <button
+                              className="btn btn-danger"
+                              onClick={() => {
+                                dropCourse(course._id);
+                              }}
+                            >
+                              Drop Course
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                      {/* <button
                         className="btn btn-danger"
                         onClick={() => {
                           dropCourse(course._id);
@@ -150,7 +179,7 @@ function ShowUser(props) {
                         }}
                       >
                         Edit Course
-                      </Button>
+                      </Button> */}
                     </div>
                   </div>
                 </div>
@@ -160,11 +189,6 @@ function ShowUser(props) {
             <div className="row justify-content-center profileButtons">
               <Button variant="success" onClick={showCourses}>
                 Enroll in a New Course
-              </Button>
-            </div>
-            <div className="row justify-content-center profileButtons">
-              <Button variant="danger" onClick={logOut}>
-                Log out
               </Button>
             </div>
           </Jumbotron>

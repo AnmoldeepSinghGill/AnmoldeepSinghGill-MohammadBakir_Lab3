@@ -63,3 +63,7 @@
 .profileButtons {
   margin-top: 20px;
 }
+
+.label-bold {
+  font-weight: bold;
+}

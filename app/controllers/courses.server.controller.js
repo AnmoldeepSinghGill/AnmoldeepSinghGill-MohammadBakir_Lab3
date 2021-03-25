@@ -13,20 +13,25 @@ exports.addCourse = (req, res, next) => {
 };
 
 exports.updateCourse = (req, res, next) => {
-    const course = new Course(req.body);
-    console.log(req.body);
-    var courseToUpdate = {
-        courseCode: req.body.courseCode,
-        courseName: req.body.courseName,
-        section: req.body.section,
-        semester: req.body.semester,
+  const course = new Course(req.body);
+  console.log(req.body);
+  var courseToUpdate = {
+    courseCode: req.body.courseCode,
+    courseName: req.body.courseName,
+    section: req.body.section,
+    semester: req.body.semester,
+  };
+  Course.findOneAndUpdate(
+    { _id: req.params.courseId },
+    courseToUpdate,
+    { useFindAndModify: false },
+    (err, co) => {
+      if (err) {
+        return next(err);
+      }
+      res.status(200).send(co);
     }
-    Course.findOneAndUpdate({_id : req.params.courseId}, courseToUpdate, {useFindAndModify: false}, (err, co) => {
-        if (err) {
-            return next(err);
-        }
-        res.status(200).send(co);
-    });
+  );
 };
 
 exports.listAllCourses = (req, res) => {
@@ -34,6 +39,7 @@ exports.listAllCourses = (req, res) => {
     if (err) {
       return next(err);
     } else {
+      console.log("courses", courses);
       console.log("courses", courses);
       res.status(200).send({ courses: courses, loggenInId: req.id });
     }
@@ -69,34 +75,32 @@ exports.deleteCourse = (req, res, next) => {
 
 // 'courseById' controller method to find a course by its id
 exports.getCourseById = function (req, res, next) {
-    // Use the 'Course' static 'findById' method to retrieve a specific student
-    Course.findById(req.params.courseId, (err, course) => {
-        if (err) {
-            // Call the next middleware with an error message
-            return next(err);
-        } else {
-            // Set the 'req.course' property
-            res.status(200).send(course);
-            // Call the next middleware
-            next();
-        }
-    });
+  // Use the 'Course' static 'findById' method to retrieve a specific student
+  Course.findById(req.params.courseId, (err, course) => {
+    if (err) {
+      // Call the next middleware with an error message
+      return next(err);
+    } else {
+      // Set the 'req.course' property
+      res.status(200).send(course);
+      // Call the next middleware
+      next();
+    }
+  });
 };
-
 
 // 'courseById' controller method to find a course by its id
 exports.getCourseById = function (req, res, next) {
-    // Use the 'Course' static 'findById' method to retrieve a specific student
-    Course.findById(req.params.courseId, (err, course) => {
-        if (err) {
-            // Call the next middleware with an error message
-            return next(err);
-        } else {
-            // Set the 'req.course' property
-            res.status(200).send(course);
-            // Call the next middleware
-            next();
-        }
-    });
+  // Use the 'Course' static 'findById' method to retrieve a specific student
+  Course.findById(req.params.courseId, (err, course) => {
+    if (err) {
+      // Call the next middleware with an error message
+      return next(err);
+    } else {
+      // Set the 'req.course' property
+      res.status(200).send(course);
+      // Call the next middleware
+      next();
+    }
+  });
 };
-

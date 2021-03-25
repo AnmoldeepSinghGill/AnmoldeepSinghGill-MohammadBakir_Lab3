@@ -107,7 +107,7 @@ function ListCourses(props) {
               Add New Course
             </Button>
           </div>
-          <table className="table">
+          {/* <table className="table">
             <thead>
               <tr>
                 <th>Course Code</th>
@@ -164,7 +164,80 @@ function ListCourses(props) {
                 </tr>
               ))}
             </tbody>
-          </table>
+          </table> */}
+          {courses.map((course, idx) => (
+            <div className="row justify-content-center" key={idx}>
+              <div className="col-sm-12">
+                <div className="card">
+                  <div className="card-body">
+                    <h3 className="card-title">{course.courseName}</h3>
+                    <div className="row">
+                      <div className="col-6">
+                        <b>Code: </b> {course.courseCode}
+                        <br />
+                        <b>Section: </b> {course.section}
+                        <br />
+                        <b>Semester: </b> {course.semester}
+                      </div>
+                      <div
+                        className="col-3"
+                        style={{ borderRight: "1px solid #b1a9a9" }}
+                      >
+                        <div className="row justify-content-center">
+                          <Button
+                            variant="success"
+                            onClick={() => {
+                              enrollInCourse(course._id);
+                            }}
+                          >
+                            Enroll Into this Course
+                          </Button>
+                        </div>
+                        <div
+                          className="row justify-content-center"
+                          style={{ marginTop: "15px" }}
+                        >
+                          <Button
+                            variant="success"
+                            onClick={() => {
+                              listStudentsEnrolled(course._id);
+                            }}
+                          >
+                            List Students Enrolled
+                          </Button>
+                        </div>
+                      </div>
+                      <div className="col-3">
+                        <div className="row justify-content-center">
+                          <Button
+                            variant="warning"
+                            onClick={() => {
+                              editCourse(course._id);
+                            }}
+                          >
+                            Edit Course
+                          </Button>
+                        </div>
+                        <div
+                          className="row justify-content-center"
+                          style={{ marginTop: "15px" }}
+                        >
+                          <button
+                            className="btn btn-danger"
+                            onClick={() => {
+                              dropCourse(course._id);
+                            }}
+                          >
+                            Drop Course
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       ) : (
         <Login />
